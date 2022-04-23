@@ -1,6 +1,6 @@
 import { Sequence, SequenceMode } from "../src/sequence";
 import { expect } from "chai";
-import { TblswvsError } from "../src/TblswvsError";
+import { TblswvsError } from "../src/tblswvs_error";
 
 describe("Sequence", () => {
     it("has a default state", () => {

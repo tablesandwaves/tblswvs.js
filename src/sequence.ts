@@ -1,4 +1,4 @@
-import { TblswvsError } from "./TblswvsError";
+import { TblswvsError } from "./tblswvs_error";
 import * as helpers from "./helpers";
 
 export enum SequenceMode {
