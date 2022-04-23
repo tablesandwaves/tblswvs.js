@@ -1,3 +1,3 @@
 import { Sequence } from "./sequence";
 
-console.log(new Sequence());
+module.exports = { Sequence };
