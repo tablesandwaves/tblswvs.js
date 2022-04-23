@@ -2,7 +2,7 @@
   "name": "tblswvs",
   "version": "0.1.0",
   "description": "Utility for opinionated processing of musical data",
-  "main": "index.js",
+  "main": "dist/build.js",
   "scripts": {
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
     "build": "npm test && webpack"

@@ -14,6 +14,10 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    library: {
+      name: 'tblswvs',
+      type: 'umd'
+    }
   },
   mode: 'production',
 };
