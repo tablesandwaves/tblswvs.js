@@ -1,3 +1,3 @@
 import { Sequence } from "./sequence";
 
-module.exports = { Sequence };
+export default { Sequence };
