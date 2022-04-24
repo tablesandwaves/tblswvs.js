@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Melody, MelodyType } from "../src/melody";
 import { TblswvsError } from "../src/tblswvs_error";
 import { MusicalSymbol } from "../src/musical_symbol";
+import * as helpers from "./test_helpers";
 
 
 describe("Melody", () => {
@@ -69,4 +70,20 @@ describe("when attempting to combine incompatible Melodies", () => {
         ];
         expect(() => { return Melody.newFrom(sources) }).to.throw(TblswvsError, "same rest symbol and mode");
     })
+});
+
+
+describe("the self-similarity algorithms", () => {
+    describe("self-replication", () => {
+        const melody = new Melody(helpers.getMelodicSteps(["A", "G", "F", "E", "D"]));
+
+        it("can generate self-similarity by ratios of N:1", () => {
+            const expected = helpers.getFileContents("self-similarity.txt").trim().split(/\s+/);
+            expect(melody.generateSelfSimilarMelody(63).values()).to.have.ordered.members(expected);
+        });
+
+        it("requires the input and output melody lengths to be coprime", () => {
+            expect(() => { melody.generateSelfSimilarMelody(15) }).to.throw(TblswvsError, "A self-similar melody");
+        });
+    });
 });
