@@ -13,6 +13,11 @@ export class MelodicVector implements Sequence, Transformation {
     }
 
 
+    values() {
+        return this.steps;
+    }
+
+
     /**
      * Transforms a melody by vector addition. Note that the vector step length and melody step
      * length do not need to be equal.

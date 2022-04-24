@@ -29,6 +29,11 @@ export class Melody implements Sequence {
     }
 
 
+    values() {
+        return this.steps.map(step => step.value);
+    }
+
+
     static newFrom(sequences: Melody[]) {
         const restSymbols = sequences.map(s => s.restSymbol).filter(helpers.unique);
         const modes       = sequences.map(s => s.melodicMode).filter(helpers.unique);
