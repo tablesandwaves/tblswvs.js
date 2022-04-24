@@ -45,6 +45,12 @@ export class Melody implements Sequence {
     }
 
 
+    /**
+     * Generate a self-replicating melody based on this Melody's steps.
+     *
+     * @param length the number of steps for the ouput melody, must be coprime with this melody's length
+     * @returns a new Melody object with steps that self-replicate at the ratio of N:1
+     */
     generateSelfSimilarMelody(length: number): Melody {
         if (!helpers.areCoprime(this.steps.length, length))
             throw new TblswvsError(helpers.SELF_SIMILARITY_REQUIRES_COPRIMES);
