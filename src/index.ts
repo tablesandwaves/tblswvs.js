@@ -1,3 +1,7 @@
-import { Sequence } from "./sequence";
+// Note: using an import will still build, but Max's node processor cannot see the properties.
+// Using require() instead.
+const sequence = require("./sequence");
 
-export default { Sequence };
+
+module.exports.Sequence     = sequence.Sequence;
+module.exports.SequenceMode = sequence.SequenceMode;

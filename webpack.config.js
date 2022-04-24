@@ -17,7 +17,9 @@ module.exports = {
     library: {
       name: 'tblswvs',
       type: 'umd'
-    }
+    },
+    libraryTarget: 'umd',
+    globalObject: 'this',
   },
   mode: 'production',
 };
