@@ -1,7 +1,7 @@
 // Note: using an import will still build, but Max's node processor cannot see the properties.
 // Using require() instead.
 const sequence = require("./sequence");
-const melody   = require("./melodic_vector");
+const melody   = require("./melody");
 const vector   = require("./melodic_vector");
 const symbol   = require("./musical_symbol");
 
