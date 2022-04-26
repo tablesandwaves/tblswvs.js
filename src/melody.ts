@@ -49,10 +49,13 @@ export class Melody implements Sequence {
      * Generate a self-replicating melody based on this Melody's steps.
      *
      * @param length the number of steps for the ouput melody, must be coprime with this melody's length
+     * @param ratio the ratio of self-similarity (step by amount). Optional, default: 2
      * @returns a new Melody object with steps that self-replicate at the ratio of N:1
      */
-    generateSelfSimilarMelody(length: number): Melody {
-        if (!helpers.areCoprime(this.steps.length, length))
+    selfReplicate(length: number, ratio?: number): Melody {
+        ratio = ratio === undefined ? 2 : ratio;
+
+        if (!helpers.areCoprime(length, ratio))
             throw new TblswvsError(helpers.SELF_SIMILARITY_REQUIRES_COPRIMES);
 
 
@@ -75,7 +78,7 @@ export class Melody implements Sequence {
                 // Determine the self replicating step amounts by computing the powers of 2 for
                 // non-redundant step amounts based on the target length
                 for (let power = 1; power <= Math.log2(length); power++) {
-                    stepAmount = 2 ** power;
+                    stepAmount = ratio ** power;
 
                     // Fill in the melody's future step indices with the current replicating note.
                     sequence[(noteIndex * stepAmount) % length] = currentNote;

@@ -78,13 +78,18 @@ describe("Melody", () => {
         describe("self-replication", () => {
             const melody = new Melody(helpers.getMelodicSteps(["A", "G", "F", "E", "D"]));
 
-            it("can generate self-similarity by ratios of N:1", () => {
-                const expected = helpers.getFileContents("self-similarity.txt").trim().split(/\s+/);
-                expect(melody.generateSelfSimilarMelody(63).values()).to.have.ordered.members(expected);
+            it("can generate self-similarity by ratios of 2^N:1", () => {
+                const expected = helpers.getFileContents("self-replicating.txt").trim().split(/\s+/);
+                expect(melody.selfReplicate(63).values()).to.have.ordered.members(expected);
+            });
+
+            it("can generate self-similarity by ratios that are not powers of 2", () => {
+                const expected = helpers.getFileContents("self-replicating-by-3s.txt").trim().split(/\s+/);
+                expect(melody.selfReplicate(16, 3).values()).to.have.ordered.members(expected);
             });
 
             it("requires the input and output melody lengths to be coprime", () => {
-                expect(() => { melody.generateSelfSimilarMelody(15) }).to.throw(TblswvsError, "A self-similar melody");
+                expect(() => { melody.selfReplicate(16) }).to.throw(TblswvsError, "A self-similar melody");
             });
         });
     });
