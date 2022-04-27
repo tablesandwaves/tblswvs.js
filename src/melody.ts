@@ -4,12 +4,27 @@ import * as helpers from "./helpers";
 import { Rhythm } from "./rhythm";
 
 
+/**
+ * The primary melody types: MIDI and Scale Degrees.
+ *
+ * MIDI mode means that integers in a Melody's steps property should be interpreted as MIDI note numbers.
+ *
+ * Scale Degrees mode means that numbers in a Melody should interpreted as scale degrees where the number 1
+ * is represented as the scale's tonic. For example, with a 7 note scale like the western modal scales, 8 is 
+ * then interpreted as the tonic raised by 1 octave. Scale degrees should be greater than or equal to 1 and
+ * the number 0 is interpreted as a rest.
+ */
 export enum MelodyType {
     MIDI    = "MIDI",
     Degrees = "Scale Degrees"
 }
 
 
+/**
+ * The Melody class represents the primary melodic object. A melody has steps that are intended to represet
+ * a sequence of notes and rests. It stores its rest symbol and its melodic mode, which should come from the
+ * MelodyType enum.
+ */
 export class Melody implements Sequence {
     steps: (string|number)[];
     restSymbol: string | number;
@@ -116,9 +131,9 @@ export class Melody implements Sequence {
      * Segment 1: 1 - 2 - 3 -
      * Segment 2: 1 2 - 3 1 - 2 3 -
      * Segment 3: 1 2 3 - 1 2 3 - 1 2 3 -
-     * 
+     *
      * All segments are concatenated to form the steps of the resulting melody.
-     * 
+     *
      * @returns a new Melody that conforms to the counting pattern
      */
     counted(): Melody {
@@ -140,6 +155,8 @@ export class Melody implements Sequence {
 
 
     /**
+     * Zig zag through a melody in a wraparound mode.
+     *
      * Logic: go 7 steps forward, 6 steps back through a melody
      * Given the melody: 1 2 3 4 5 6 7 8 9 10 11 12
      * Generate:
@@ -148,7 +165,9 @@ export class Melody implements Sequence {
      * ...
      * Segment 11: 11 12 1 2 3 4 5 5 4 3 2 1 12
      * Segment 12: 12 1 2 3 4 5 6 6 5 4 3 2 1
-     * 
+     *
+     * All segments are concatenated to form the steps of the resulting melody.
+     *
      * @returns a new Melody that conforms to the zig-zag pattern.
      */
     zigZag(): Melody {
