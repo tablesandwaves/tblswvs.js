@@ -80,17 +80,32 @@ describe("Melody", () => {
 
             it("can generate self-similarity by ratios of 2^N:1", () => {
                 const expected = helpers.getFileContents("self-replicating.txt").trim().split(/\s+/);
-                expect(melody.selfReplicate(63).values()).to.have.ordered.members(expected);
+                const actual   = melody.selfReplicate(63).values();
+                expect(actual).to.have.ordered.members(expected);
+                expect(helpers.isSelfReplicatingAt(actual, 2)).to.be.true;
             });
 
             it("can generate self-similarity by ratios that are not powers of 2", () => {
                 const expected = helpers.getFileContents("self-replicating-by-3s.txt").trim().split(/\s+/);
-                expect(melody.selfReplicate(16, 3).values()).to.have.ordered.members(expected);
+                const actual   = melody.selfReplicate(16, 3).values();
+                expect(actual).to.have.ordered.members(expected);
+                expect(helpers.isSelfReplicatingAt(actual, 3)).to.be.true;
             });
 
             it("requires the input and output melody lengths to be coprime", () => {
                 expect(() => { melody.selfReplicate(16) }).to.throw(TblswvsError, "A self-similar melody");
             });
+        });
+
+
+        describe("counting music", () => {
+            const melody = new Melody(helpers.getMelodicSteps(['1', '2', '3', '4', '5', '6', '7']), "-");
+
+            it("counts the steps by increasingly adjacent note sub-sequences", () => {
+                const expected = helpers.getFileContents("counting-music.txt").trim().split(/\s+/);
+                const actual   = melody.counted().values();
+                expect(actual).to.have.ordered.members(expected);
+            })
         });
     });
 });

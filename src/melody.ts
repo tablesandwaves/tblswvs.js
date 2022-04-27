@@ -2,6 +2,7 @@ import { Sequence } from "./sequence";
 import { MusicalSymbol } from "./musical_symbol";
 import { TblswvsError } from "./tblswvs_error";
 import * as helpers from "./helpers";
+import { Rhythm } from "./rhythm";
 
 
 export enum MelodyType {
@@ -96,5 +97,23 @@ export class Melody implements Sequence {
         let melody = this.clone();
         melody.steps = sequence.map(number => new MusicalSymbol(number));
         return melody;
+    }
+
+
+    counted(): Melody {
+        let sequence = new Array<MusicalSymbol>();
+
+        for (let i = 1; i <= this.steps.length; i++) {
+            let rhythmSteps = new Array(i).fill(1);
+            rhythmSteps.push(0);
+            let length = this.steps.length * (i + 1);
+            let rhythm = new Rhythm(rhythmSteps, "wrap", length);
+
+            rhythm.applyTo(this).steps.forEach(musicalSymbol => sequence.push(musicalSymbol));
+        }
+        let countedMelody = this.clone();
+        countedMelody.steps = sequence;
+
+        return countedMelody;
     }
 }
