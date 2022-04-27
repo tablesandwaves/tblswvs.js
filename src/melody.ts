@@ -25,16 +25,35 @@ export class Melody implements Sequence {
     }
 
 
+    /**
+     * Clone this melody.
+     * 
+     * @returns a new copy of this object.
+     */
     clone() {
         return new Melody(this.steps, this.restSymbol, this.melodicMode);
     }
 
 
+    /**
+     * Get the Melody's steps as a simple Array instead of an Array of MusicalSymbol objects.
+     * 
+     * @returns the values of this Melody's steps property as an Array containing strings and/or numbers
+     */
     values() {
         return this.steps.map(step => step.value);
     }
 
 
+    /**
+     * Create a new Melody from multiple Melody objects.
+     * 
+     * Note that the melodies being combined must have the same restSymbol and melodicMode parameters
+     * or this method will throw a TblswvsError.
+     * 
+     * @param sequences an Array of Melody objects
+     * @returns a new Melody that combines the sequences steps
+     */
     static newFrom(sequences: Melody[]) {
         const restSymbols = sequences.map(s => s.restSymbol).filter(helpers.unique);
         const modes       = sequences.map(s => s.melodicMode).filter(helpers.unique);
@@ -100,6 +119,19 @@ export class Melody implements Sequence {
     }
 
 
+    /**
+     * The sequence counting pattern.
+     * 
+     * Given: 1 2 3
+     * Generate:
+     * Segment 1: 1 - 2 - 3 -
+     * Segment 2: 1 2 - 3 1 - 2 3 -
+     * Segment 3: 1 2 3 - 1 2 3 - 1 2 3 -
+     * 
+     * All segments are concatenated to form the steps of the resulting melody.
+     * 
+     * @returns a new Melody that conforms to the counting pattern
+     */
     counted(): Melody {
         let sequence = new Array<MusicalSymbol>();
 
@@ -115,5 +147,29 @@ export class Melody implements Sequence {
         countedMelody.steps = sequence;
 
         return countedMelody;
+    }
+
+
+    /**
+     * Logic: go 7 steps forward, 6 steps back through a melody
+     * Given the melody: 1 2 3 4 5 6 7 8 9 10 11 12
+     * Generate:
+     * Segment 1:   1 2 3 4 5 6 7 7 6 5 4 3 2
+     * Segment 2:   2 3 4 5 6 7 8 8 7 6 5 4 3
+     * ...
+     * Segment 11: 11 12 1 2 3 4 5 5 4 3 2 1 12
+     * Segment 12: 12 1 2 3 4 5 6 6 5 4 3 2 1
+     * 
+     * @returns a new Melody that conforms to the zig-zag pattern.
+     */
+    zigZag(): Melody {
+        let steps = this.steps.reduce((previous, current, i) => {
+            let segment = new Array(7).fill(-1).map((_, j) => this.steps[(j + i) % this.steps.length]);
+            previous.push(segment);
+            previous.push(segment.slice(1, 7).reverse());
+            return previous;
+        }, new Array()).flat();
+
+        return new Melody(steps);
     }
 }

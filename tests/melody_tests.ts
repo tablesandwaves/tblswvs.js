@@ -99,13 +99,24 @@ describe("Melody", () => {
 
 
         describe("counting music", () => {
-            const melody = new Melody(helpers.getMelodicSteps(['1', '2', '3', '4', '5', '6', '7']), "-");
+            const melody = new Melody(helpers.getMelodicSteps(["1", "2", "3", "4", "5", "6", "7"]), "-");
 
             it("counts the steps by increasingly adjacent note sub-sequences", () => {
                 const expected = helpers.getFileContents("counting-music.txt").trim().split(/\s+/);
                 const actual   = melody.counted().values();
                 expect(actual).to.have.ordered.members(expected);
             })
+        });
+
+
+        describe("zig-zag", () => {
+            const melody = new Melody(helpers.getMelodicSteps(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]));
+
+            it("zigs: n / 2 + 1 forward; it zags: n / 2 back", () => {
+                const expected = helpers.getFileContents("zig-zag.txt").trim().split(/\s+/);
+                const actual = melody.zigZag().values();
+                expect(actual).to.have.ordered.members(expected);
+            });
         });
     });
 });
