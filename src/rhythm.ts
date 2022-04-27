@@ -1,5 +1,4 @@
 import { Melody } from "./melody";
-import { MusicalSymbol } from "./musical_symbol";
 import { Sequence } from "./sequence";
 import { Transformation } from "./transformation";
 
@@ -48,15 +47,15 @@ export class Rhythm implements Sequence, Transformation {
         let processedStepIndex = 0;
         transformedSequence.forEach((step, i) => {
             if (step == 1) {
-                transformedSequence[i] = melody.steps[processedStepIndex % melody.steps.length].value;
+                transformedSequence[i] = melody.steps[processedStepIndex % melody.steps.length];
                 processedStepIndex++;
             } else {
                 transformedSequence[i] = melody.restSymbol;
             }
         });
 
-        let transformedMelody = transformedSequence.map(step => new MusicalSymbol(step));
+        // let transformedMelody = transformedSequence.map(step => new MusicalSymbol(step));
 
-        return new Melody(transformedMelody, melody.restSymbol, melody.melodicMode);
+        return new Melody(transformedSequence, melody.restSymbol, melody.melodicMode);
     }
 }

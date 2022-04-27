@@ -1,6 +1,5 @@
 import { Sequence } from "./sequence";
 import { Melody, MelodyType } from "./melody";
-import { MusicalSymbol } from "./musical_symbol";
 import { Transformation } from "./transformation";
 
 
@@ -34,13 +33,13 @@ export class MelodicVector implements Sequence, Transformation {
         // Then apply the vector addition.
         const transformedMelody = melody.clone();
         transformedMelody.steps = expandedSteps.map((step, i) => {
-            if (melody.melodicMode == MelodyType.Degrees && melody.steps[i].value == 0)
+            if (melody.melodicMode == MelodyType.Degrees && melody.steps[i] == 0)
                 return 0;
-            else if (melody.steps[i].value == melody.restSymbol)
-                return melody.steps[i].value;
+            else if (melody.steps[i] == melody.restSymbol)
+                return melody.steps[i];
             else
-                return step + melody.steps[i].value;
-        }).map(step => new MusicalSymbol(step));
+                return step + melody.steps[i];
+        });
 
         return transformedMelody;
     }

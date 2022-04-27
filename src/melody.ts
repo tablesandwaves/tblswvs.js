@@ -12,14 +12,14 @@ export enum MelodyType {
 
 
 export class Melody implements Sequence {
-    steps: MusicalSymbol[];
+    steps: (string|number)[];
     restSymbol: string | number;
     melodicMode: MelodyType;
 
 
-    constructor(steps?: MusicalSymbol[], restSymbol?: number | string, mode?: MelodyType) {
+    constructor(steps?: (string|number)[], restSymbol?: number | string, mode?: MelodyType) {
 
-        this.steps = steps === undefined ? new Array<MusicalSymbol>() : steps;
+        this.steps = steps === undefined ? new Array<(string|number)>() : steps;
         this.restSymbol = restSymbol === undefined ? 0 : restSymbol;
         this.melodicMode = mode == undefined ? MelodyType.Degrees : mode;
     }
@@ -35,14 +35,14 @@ export class Melody implements Sequence {
     }
 
 
-    /**
-     * Get the Melody's steps as a simple Array instead of an Array of MusicalSymbol objects.
-     * 
-     * @returns the values of this Melody's steps property as an Array containing strings and/or numbers
-     */
-    values() {
-        return this.steps.map(step => step.value);
-    }
+    // /**
+    //  * Get the Melody's steps as a simple Array instead of an Array of MusicalSymbol objects.
+    //  * 
+    //  * @returns the values of this Melody's steps property as an Array containing strings and/or numbers
+    //  */
+    // values() {
+    //     return this.steps.map(step => step.value);
+    // }
 
 
     /**
@@ -80,8 +80,8 @@ export class Melody implements Sequence {
 
 
         let sequence = new Array(length).fill(-1);
-        sequence[0] = this.steps[0].value;
-        sequence[1] = this.steps[1].value;
+        sequence[0] = this.steps[0];
+        sequence[1] = this.steps[1];
 
         let contiguousSequence, currentNote, stepAmount, nextNote;
         let nextEmpty = sequence.findIndex(note => note == -1),
@@ -107,14 +107,14 @@ export class Melody implements Sequence {
 
             // If the sequence still has empty spots, find the first one and fill it with the next
             // note in the input note list.
-            nextNote = this.steps[count % this.steps.length].value;
+            nextNote = this.steps[count % this.steps.length];
             nextEmpty = sequence.findIndex(note => note == -1);
             if (nextEmpty != -1) sequence[nextEmpty] = nextNote;
             count++;
         } while (nextEmpty != -1);
 
         let melody = this.clone();
-        melody.steps = sequence.map(number => new MusicalSymbol(number));
+        melody.steps = sequence; //.map(number => new MusicalSymbol(number));
         return melody;
     }
 
@@ -133,7 +133,7 @@ export class Melody implements Sequence {
      * @returns a new Melody that conforms to the counting pattern
      */
     counted(): Melody {
-        let sequence = new Array<MusicalSymbol>();
+        let sequence = new Array<(string|number)>();
 
         for (let i = 1; i <= this.steps.length; i++) {
             let rhythmSteps = new Array(i).fill(1);
@@ -141,7 +141,7 @@ export class Melody implements Sequence {
             let length = this.steps.length * (i + 1);
             let rhythm = new Rhythm(rhythmSteps, "wrap", length);
 
-            rhythm.applyTo(this).steps.forEach(musicalSymbol => sequence.push(musicalSymbol));
+            rhythm.applyTo(this).steps.forEach(step => sequence.push(step));
         }
         let countedMelody = this.clone();
         countedMelody.steps = sequence;

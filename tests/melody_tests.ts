@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { Melody, MelodyType } from "../src/melody";
 import { TblswvsError } from "../src/tblswvs_error";
-import { MusicalSymbol } from "../src/musical_symbol";
 import * as helpers from "./test_helpers";
 
 
@@ -16,7 +15,7 @@ describe("Melody", () => {
         });
 
         it("can be initialized with different parameters", () => {
-            const notes = [60, 67, 69, 65].map(number => new MusicalSymbol(number));
+            const notes = [60, 67, 69, 65];
             const mode = MelodyType.MIDI;
 
             expect(new Melody(notes).steps).to.be.an("array").that.has.ordered.members(notes);
@@ -27,7 +26,7 @@ describe("Melody", () => {
 
 
     describe("when cloning from another one", () => {
-        const source = new Melody([new MusicalSymbol(60)], "-", MelodyType.MIDI);
+        const source = new Melody([60], "-", MelodyType.MIDI);
         const copy = source.clone();
 
         it("is not the same object", () => expect(copy).to.not.equal(source));
@@ -40,13 +39,13 @@ describe("Melody", () => {
 
     describe("when created from multiple melodies", () => {
         const sources = [
-            new Melody([new MusicalSymbol(60)], "-", MelodyType.MIDI),
-            new Melody([new MusicalSymbol(67)], "-", MelodyType.MIDI)
+            new Melody([60], "-", MelodyType.MIDI),
+            new Melody([67], "-", MelodyType.MIDI)
         ];
         const copy = Melody.newFrom(sources);
 
         it("combines the steps", () => {
-            let actual = copy.steps.map(step => step.value);
+            let actual = copy.steps;
             expect(actual).to.have.ordered.members([60, 67])
         });
         it("has a rest symbol", () => expect(copy.restSymbol).to.equal("-"));
@@ -58,16 +57,16 @@ describe("Melody", () => {
 
         it("cannot combine melodies with different rest symbols", () => {
             const sources = [
-                new Melody([new MusicalSymbol(60)], 0, MelodyType.MIDI),
-                new Melody([new MusicalSymbol(67)], "-", MelodyType.MIDI)
+                new Melody([60], 0, MelodyType.MIDI),
+                new Melody([67], "-", MelodyType.MIDI)
             ];
             expect(() => { return Melody.newFrom(sources) }).to.throw(TblswvsError, "same rest symbol and mode");
         });
 
         it("cannot combine melodies with different modes", () => {
             const sources = [
-                new Melody([new MusicalSymbol(60)], "-", MelodyType.Degrees),
-                new Melody([new MusicalSymbol(60)], "-", MelodyType.MIDI)
+                new Melody([60], "-", MelodyType.Degrees),
+                new Melody([60], "-", MelodyType.MIDI)
             ];
             expect(() => { return Melody.newFrom(sources) }).to.throw(TblswvsError, "same rest symbol and mode");
         })
@@ -76,18 +75,18 @@ describe("Melody", () => {
 
     describe("the self-similarity algorithms", () => {
         describe("self-replication", () => {
-            const melody = new Melody(helpers.getMelodicSteps(["A", "G", "F", "E", "D"]));
+            const melody = new Melody(["A", "G", "F", "E", "D"]);
 
             it("can generate self-similarity by ratios of 2^N:1", () => {
                 const expected = helpers.getFileContents("self-replicating.txt").trim().split(/\s+/);
-                const actual   = melody.selfReplicate(63).values();
+                const actual   = melody.selfReplicate(63).steps;
                 expect(actual).to.have.ordered.members(expected);
                 expect(helpers.isSelfReplicatingAt(actual, 2)).to.be.true;
             });
 
             it("can generate self-similarity by ratios that are not powers of 2", () => {
                 const expected = helpers.getFileContents("self-replicating-by-3s.txt").trim().split(/\s+/);
-                const actual   = melody.selfReplicate(16, 3).values();
+                const actual   = melody.selfReplicate(16, 3).steps;
                 expect(actual).to.have.ordered.members(expected);
                 expect(helpers.isSelfReplicatingAt(actual, 3)).to.be.true;
             });
@@ -99,22 +98,22 @@ describe("Melody", () => {
 
 
         describe("counting music", () => {
-            const melody = new Melody(helpers.getMelodicSteps(["1", "2", "3", "4", "5", "6", "7"]), "-");
+            const melody = new Melody(["1", "2", "3", "4", "5", "6", "7"], "-");
 
             it("counts the steps by increasingly adjacent note sub-sequences", () => {
                 const expected = helpers.getFileContents("counting-music.txt").trim().split(/\s+/);
-                const actual   = melody.counted().values();
+                const actual   = melody.counted().steps;
                 expect(actual).to.have.ordered.members(expected);
             })
         });
 
 
         describe("zig-zag", () => {
-            const melody = new Melody(helpers.getMelodicSteps(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]));
+            const melody = new Melody(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
 
             it("zigs: n / 2 + 1 forward; it zags: n / 2 back", () => {
                 const expected = helpers.getFileContents("zig-zag.txt").trim().split(/\s+/);
-                const actual = melody.zigZag().values();
+                const actual = melody.zigZag().steps;
                 expect(actual).to.have.ordered.members(expected);
             });
         });
