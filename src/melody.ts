@@ -1,5 +1,4 @@
 import { Sequence } from "./sequence";
-import { MusicalSymbol } from "./musical_symbol";
 import { TblswvsError } from "./tblswvs_error";
 import * as helpers from "./helpers";
 import { Rhythm } from "./rhythm";
@@ -33,16 +32,6 @@ export class Melody implements Sequence {
     clone() {
         return new Melody(this.steps, this.restSymbol, this.melodicMode);
     }
-
-
-    // /**
-    //  * Get the Melody's steps as a simple Array instead of an Array of MusicalSymbol objects.
-    //  * 
-    //  * @returns the values of this Melody's steps property as an Array containing strings and/or numbers
-    //  */
-    // values() {
-    //     return this.steps.map(step => step.value);
-    // }
 
 
     /**
@@ -114,7 +103,7 @@ export class Melody implements Sequence {
         } while (nextEmpty != -1);
 
         let melody = this.clone();
-        melody.steps = sequence; //.map(number => new MusicalSymbol(number));
+        melody.steps = sequence;
         return melody;
     }
 

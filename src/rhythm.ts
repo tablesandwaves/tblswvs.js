@@ -54,8 +54,6 @@ export class Rhythm implements Sequence, Transformation {
             }
         });
 
-        // let transformedMelody = transformedSequence.map(step => new MusicalSymbol(step));
-
         return new Melody(transformedSequence, melody.restSymbol, melody.melodicMode);
     }
 }
