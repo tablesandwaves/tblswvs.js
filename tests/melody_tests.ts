@@ -109,10 +109,16 @@ describe("Melody", () => {
 
 
         describe("zig-zag", () => {
-            const melody = new Melody(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
-
-            it("zigs: n / 2 + 1 forward; it zags: n / 2 back", () => {
+            it("works for an even number of steps", () => {
+                const melody = new Melody(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]);
                 const expected = helpers.getFileContents("zig-zag.txt").trim().split(/\s+/);
+                const actual = melody.zigZag().steps;
+                expect(actual).to.have.ordered.members(expected);
+            });
+
+            it("works for an odd number of steps", () => {
+                const melody = new Melody(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]);
+                const expected = helpers.getFileContents("zig-zag-odd.txt").trim().split(/\s+/);
                 const actual = melody.zigZag().steps;
                 expect(actual).to.have.ordered.members(expected);
             });

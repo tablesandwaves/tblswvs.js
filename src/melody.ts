@@ -152,10 +152,11 @@ export class Melody implements Sequence {
      * @returns a new Melody that conforms to the zig-zag pattern.
      */
     zigZag(): Melody {
+        let turnAroundStep = this.steps.length % 2 == 0 ? this.steps.length / 2 + 1 : Math.ceil(this.steps.length / 2);
         let steps = this.steps.reduce((previous, current, i) => {
-            let segment = new Array(7).fill(-1).map((_, j) => this.steps[(j + i) % this.steps.length]);
+            let segment = new Array(turnAroundStep).fill(-1).map((_, j) => this.steps[(j + i) % this.steps.length]);
             previous.push(segment);
-            previous.push(segment.slice(1, 7).reverse());
+            previous.push(segment.slice(1, turnAroundStep).reverse());
             return previous;
         }, new Array()).flat();
 
