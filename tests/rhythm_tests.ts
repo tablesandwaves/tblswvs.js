@@ -2,7 +2,6 @@ import { expect } from "chai";
 
 import { Melody, MelodyType } from "../src/melody";
 import { Rhythm } from "../src/rhythm";
-import * as helpers from "./test_helpers";
 
 
 describe("Rhythm", () => {
