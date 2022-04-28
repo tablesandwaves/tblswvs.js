@@ -8,7 +8,7 @@ describe("Rhythm", () => {
     const rhythm = new Rhythm([1, 1, 0]);
 
     describe("is a Sequence", () => {
-        it("should have steps that can be returned as values", () => expect(rhythm.values()).to.have.ordered.members([1, 1, 0]));
+        it("should have steps that can be returned as values", () => expect(rhythm.steps).to.have.ordered.members([1, 1, 0]));
         it("should have step values of 1 or 0", () => rhythm.steps.forEach(step => expect(step).to.be.a("number").and.to.be.oneOf([0, 1])));
     });
 
