@@ -206,24 +206,30 @@ export class Melody implements Sequence {
 
 
     /**
+     * Returns the value for any index of the base infinity series sequence (0, 1 seed). This function enables
+     * an efficient way to compute any arbitrary section of the infinity series without needing to compute
+     * the entire sequence up to that point.
+     *
      * This is the Infinity Series binary trick. Steps:
+     *
      * 1. Convert the integer n to binary string
      * 2. Split the string and map as an Array of 1s and 0s
      * 3. Loop thru the digits, summing the 1s digits, and changing the negative/positve
      *    polarity **at each step** when a 0 is encounterd
+     *
+     * @param index the 0-based index of the infinity series
+     * @returns the value in the infinity series at the given index.
      */
-    static norgardInteger(num: number) {
-        let binaryDigits = num.toString(2).split("").map(bit => parseInt(bit));
+    static norgardInteger(index: number) {
+        let binaryDigits = index.toString(2).split("").map(bit => parseInt(bit));
 
-        let integer = binaryDigits.reduce((integer, digit) => {
+        return binaryDigits.reduce((integer, digit) => {
             if (digit == 1) {
-                integer++;
+                integer += 1;
             } else {
                 integer *= -1;
             }
             return integer;
         }, 0);
-
-        return integer;
     }
 }
