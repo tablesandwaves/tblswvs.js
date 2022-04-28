@@ -181,4 +181,49 @@ export class Melody implements Sequence {
 
         return new Melody(steps);
     }
+
+
+    /**
+     * Generate the Norgard infinity series sequence.
+     *
+     * @param seed the sequence's first two steps, defaults to 0, 1
+     * @param size the length of the resulting Meldoy's steps, defaults to 16
+     * @param offset offset in the returned sequence from which the sequence starts
+     * @returns a Melody with the infinity series as its steps
+     */
+    static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number = 0) {
+        let   melody = new Melody();
+        const root   = seed[0];
+        const step1  = seed[1];
+        const seedInterval = step1 - root;
+
+        melody.steps = Array.from(new Array(size), (n, i) => i + offset).map(step => {
+            return root + (Melody.norgardInteger(step) * seedInterval);
+        });
+
+        return melody;
+    }
+
+
+    /**
+     * This is the Infinity Series binary trick. Steps:
+     * 1. Convert the integer n to binary string
+     * 2. Split the string and map as an Array of 1s and 0s
+     * 3. Loop thru the digits, summing the 1s digits, and changing the negative/positve
+     *    polarity **at each step** when a 0 is encounterd
+     */
+    static norgardInteger(num: number) {
+        let binaryDigits = num.toString(2).split("").map(bit => parseInt(bit));
+
+        let integer = binaryDigits.reduce((integer, digit) => {
+            if (digit == 1) {
+                integer++;
+            } else {
+                integer *= -1;
+            }
+            return integer;
+        }, 0);
+
+        return integer;
+    }
 }

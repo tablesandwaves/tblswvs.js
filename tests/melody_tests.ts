@@ -124,4 +124,28 @@ describe("Melody", () => {
             });
         });
     });
+
+
+    describe("the infinity series", () => {
+        const baseSequence  = [0, 1, -1, 2, 1, 0, -2, 3, -1, 2, 0, 1, 2, -1, -3, 4];
+        const seqquence_0_3 = [0, 3, -3, 6, 3, 0, -6, 9, -3, 6, 0, 3, 6, -3, -9, 12];
+
+        it("produces the base sequence when given no args", () => {
+            expect(Melody.infinitySeries().steps).to.have.ordered.members(baseSequence);
+        });
+
+        it("can generate series with different seeds", () => {
+            expect(Melody.infinitySeries([0, 3]).steps).to.have.ordered.members(seqquence_0_3);
+        });
+
+        it("can generate an arbitrary portion of the sequence", () => {
+            const thru128       = Melody.infinitySeries([0, 1], 128).steps;
+            const offset120for8 = Melody.infinitySeries([0, 1], 8, 120).steps;
+            expect(offset120for8).to.have.ordered.members(thru128.slice(120, 128));
+        });
+
+        it("can generate an arbitrary portion for any seed", () => {
+            expect(Melody.infinitySeries([0, 3], 4, 4).steps).to.have.ordered.members(seqquence_0_3.slice(4, 8));
+        });
+    });
 });
