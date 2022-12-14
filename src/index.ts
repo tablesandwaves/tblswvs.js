@@ -4,9 +4,11 @@ const melody  = require("./melody");
 const vector  = require("./melodic_vector");
 const rhythm  = require("./rhythm");
 const lsystem = require("./lindenmayer_system");
+const markov  = require("./markov_chain");
 
 module.exports.MelodyType        = melody.MelodyType;
 module.exports.Melody            = melody.Melody;
 module.exports.MelodicVector     = vector.MelodicVector;
 module.exports.Rhythm            = rhythm.Rhythm;
 module.exports.LindenmayerSystem = lsystem.LindenmayerSystem;
+module.exports.MarkovChain       = markov.MarkovChain;
