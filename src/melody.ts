@@ -10,7 +10,7 @@ import { Rhythm } from "./rhythm";
  * MIDI mode means that integers in a Melody's steps property should be interpreted as MIDI note numbers.
  *
  * Scale Degrees mode means that numbers in a Melody should interpreted as scale degrees where the number 1
- * is represented as the scale's tonic. For example, with a 7 note scale like the western modal scales, 8 is 
+ * is represented as the scale's tonic. For example, with a 7 note scale like the western modal scales, 8 is
  * then interpreted as the tonic raised by 1 octave. Scale degrees should be greater than or equal to 1 and
  * the number 0 is interpreted as a rest.
  */
@@ -41,7 +41,7 @@ export class Melody implements Sequence {
 
     /**
      * Clone this melody.
-     * 
+     *
      * @returns a new copy of this object.
      */
     clone() {
@@ -51,10 +51,10 @@ export class Melody implements Sequence {
 
     /**
      * Create a new Melody from multiple Melody objects.
-     * 
+     *
      * Note that the melodies being combined must have the same restSymbol and melodicMode parameters
      * or this method will throw a TblswvsError.
-     * 
+     *
      * @param sequences an Array of Melody objects
      * @returns a new Melody that combines the sequences steps
      */
@@ -125,7 +125,7 @@ export class Melody implements Sequence {
 
     /**
      * The sequence counting pattern.
-     * 
+     *
      * Given: 1 2 3
      * Generate:
      * Segment 1: 1 - 2 - 3 -

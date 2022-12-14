@@ -27,3 +27,18 @@ export const areCoprime = (num1: number, num2: number) => {
 
     return true;
 };
+
+
+export const rotate = (arr: any[], offset: number): any[] => {
+    let copy = arr.slice();
+    if (copy.length > offset) {
+        copy.unshift(...copy.splice(-offset));
+    } else {
+        let i = 0;
+        while (i < offset) {
+            copy.unshift(copy.splice(-1));
+            i++;
+        }
+    }
+    return copy;
+}
