@@ -79,4 +79,27 @@ describe("Harmony", () => {
             });
         });
     });
+
+
+    describe("when identifying scale notes", () => {
+        describe("for the diatonic modes", () => {
+            it("can find scale notes with no accidentals", () => {
+                expect(Harmony.getScaleNotes("C", Scale.Major)).to.have.ordered.members(["C", "D", "E", "F", "G", "A", "B"]);
+                expect(Harmony.getScaleNotes("A", Scale.Minor)).to.have.ordered.members(["A", "B", "C", "D", "E", "F", "G"]);
+            });
+
+            it("can find scale notes with accidentals", () => {
+                expect(Harmony.getScaleNotes("G", Scale.Major)).to.have.ordered.members(["G", "A", "B", "C", "D", "E", "F#"]);
+            });
+
+            it("can find scale notes with double sharps", () => {
+                expect(Harmony.getScaleNotes("G#", Scale.Major)).to.have.ordered.members(["G#", "A#", "B#", "C#", "D#", "E#", "Fx"]);
+            });
+
+            it("can find scale notes for pentatonics (diatonic skips)", () => {
+                expect(Harmony.getScaleNotes("F#", Scale.MajPentatonic)).to.have.ordered.members(["F#", "G#", "A#", "C#", "D#"]);
+                expect(Harmony.getScaleNotes("E", Scale.MinPentatonic)).to.have.ordered.members(["E", "G", "A", "B", "D"]);
+            });
+        });
+    });
 });

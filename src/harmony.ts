@@ -1,4 +1,5 @@
 import * as helpers from "./helpers";
+import { scaleNoteCandidates } from "./note_data";
 
 
 export enum Scale {
@@ -19,19 +20,22 @@ export enum Scale {
 export class Harmony {
     scaleOffsets: number[];
     chordQualities: string[];
+    scaleDegreeMapping: (number[] | undefined);
 
 
-    static MAJOR_STEP_OFFSETS = [2, 2, 1, 2, 2, 2, 1];
+    static MAJOR_STEP_OFFSETS   = [2, 2, 1, 2, 2, 2, 1];
+    static ABC_NOTES_MIDI_ORDER = ["C", "D", "E", "F", "G", "A", "B"];
 
 
-    constructor(scaleOffsets: number[], chordQualities: string[]) {
+    constructor(scaleOffsets: number[], chordQualities: string[], scaleDegreeMapping?: number[]) {
         this.scaleOffsets   = scaleOffsets;
         this.chordQualities = chordQualities;
+        this.scaleDegreeMapping = scaleDegreeMapping;
     }
 
 
     static getMode(mode: Scale): Harmony {
-        let _mode;
+        let _mode, scaleDegreeMapping;
 
         _mode = (mode == Scale.Major || mode == Scale.MajPentatonic) ? Scale.Ionian : mode;
         _mode = (mode == Scale.Minor || mode == Scale.MinPentatonic) ? Scale.Aeolian : mode;
@@ -40,15 +44,30 @@ export class Harmony {
         if (mode == Scale.MajPentatonic) {
             offsets.splice(2, 2, 3);
             offsets.splice(-2, 2, 3);
+            scaleDegreeMapping = [1, 2, 3, 5, 6];
         } else if (mode == Scale.MinPentatonic) {
             offsets.splice(0, 2, 3);
             offsets.splice(-3, 2, 3);
+            scaleDegreeMapping = [1, 3, 4, 5, 7];
         }
 
-        return new Harmony(
-            Harmony.cummulativeOffsets(offsets),
-            Harmony.chordQualities(offsets)
-        );
+        return new Harmony(Harmony.cummulativeOffsets(offsets), Harmony.chordQualities(offsets), scaleDegreeMapping);
+    }
+
+
+    static getScaleNotes(tonic: string, scale: Scale): string[] {
+        const mode            = Harmony.getMode(scale);
+        const rotatedAbsolute = helpers.rotate(scaleNoteCandidates, -scaleNoteCandidates.findIndex(n => n.includes(tonic)));
+        let   scaleAbcNotes   = helpers.rotate(Harmony.ABC_NOTES_MIDI_ORDER, -Harmony.ABC_NOTES_MIDI_ORDER.indexOf(tonic[0]));
+
+        if (mode.scaleDegreeMapping != undefined) {
+            scaleAbcNotes = mode.scaleDegreeMapping.map(d => scaleAbcNotes[d - 1]);
+        }
+
+        return scaleAbcNotes.map((n, i) => {
+            const absoluteIndex = mode.scaleOffsets[i];
+            return rotatedAbsolute[absoluteIndex].find((sn: string[]) => sn[0] == n);
+        });
     }
 
 
