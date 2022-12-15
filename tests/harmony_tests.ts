@@ -65,6 +65,12 @@ describe("Harmony", () => {
                 expect(locrianMode.scaleOffsets).to.have.ordered.members([0, 1, 3, 5, 6, 8, 10]);
                 expect(locrianMode.chordQualities).to.have.ordered.members(["dim", "M", "m", "m", "M", "M", "m"]);
             });
+
+            it("GS", () => {
+                const gsMode = Harmony.getMode(Scale.GS);
+                expect(gsMode.scaleOffsets).to.have.ordered.members([0, 1, 3, 4, 5, 8, 9]);
+                expect(gsMode.chordQualities).to.have.ordered.members(["m5bb", "m", "sus25b", "aug", "aug", "M", "M"]);
+            });
         });
     });
 
@@ -127,6 +133,11 @@ describe("Harmony", () => {
         it("can find scale notes for Chromatic", () => {
             const expected = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
             expect(Harmony.getScaleNotes("C", Scale.Chromatic)).to.have.ordered.members(expected);
+        });
+
+        it("can find scale notes for GS", () => {
+            const expected = ["C", "Db", "Eb", "Fb", "Gbb", "Ab", "Bbb"];
+            expect(Harmony.getScaleNotes("C", Scale.GS)).to.have.ordered.members(expected);
         });
     });
 });
