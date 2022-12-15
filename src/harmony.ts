@@ -13,7 +13,8 @@ export enum Scale {
     Major,
     Minor,
     MajPentatonic,
-    MinPentatonic
+    MinPentatonic,
+    WholeTone
 }
 
 
@@ -24,6 +25,7 @@ export class Harmony {
 
 
     static MAJOR_STEP_OFFSETS   = [2, 2, 1, 2, 2, 2, 1];
+    static WHOLE_TONE_OFFSETS   = [2, 2, 2, 2, 2, 2];
     static ABC_NOTES_MIDI_ORDER = ["C", "D", "E", "F", "G", "A", "B"];
 
 
@@ -35,12 +37,12 @@ export class Harmony {
 
 
     static getMode(mode: Scale): Harmony {
-        let _mode, scaleDegreeMapping;
+        let _mode, offsets, scaleDegreeMapping;
 
         _mode = (mode == Scale.Major || mode == Scale.MajPentatonic) ? Scale.Ionian : mode;
         _mode = (mode == Scale.Minor || mode == Scale.MinPentatonic) ? Scale.Aeolian : mode;
 
-        const offsets = helpers.rotate(Harmony.MAJOR_STEP_OFFSETS, -_mode);
+        offsets = helpers.rotate(Harmony.MAJOR_STEP_OFFSETS, -_mode);
         if (mode == Scale.MajPentatonic) {
             offsets.splice(2, 2, 3);
             offsets.splice(-2, 2, 3);
@@ -49,6 +51,9 @@ export class Harmony {
             offsets.splice(0, 2, 3);
             offsets.splice(-3, 2, 3);
             scaleDegreeMapping = [1, 3, 4, 5, 7];
+        } else if (mode == Scale.WholeTone) {
+            offsets = Harmony.WHOLE_TONE_OFFSETS;
+            scaleDegreeMapping = [1, 2, 3, 4, 5, 6];
         }
 
         return new Harmony(Harmony.cummulativeOffsets(offsets), Harmony.chordQualities(offsets), scaleDegreeMapping);
@@ -96,6 +101,10 @@ export class Harmony {
                 }
                 case "3:3": {
                     chordSteps.push("dim");
+                    break;
+                }
+                case "4:4": {
+                    chordSteps.push("aug");
                     break;
                 }
                 case "4:5": {
