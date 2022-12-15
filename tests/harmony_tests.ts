@@ -86,6 +86,14 @@ describe("Harmony", () => {
             expect(wholeTone.scaleOffsets).to.have.ordered.members([0, 2, 4, 6, 8, 10]);
             expect(wholeTone.chordQualities).to.have.ordered.members(["aug", "aug", "aug", "aug", "aug", "aug"]);
         });
+
+        it("Chromatic", () => {
+            const chromatic = Harmony.getMode(Scale.Chromatic);
+            const expectedOffsets = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+            const expectedQualities = ["WT", "WT", "WT", "WT", "WT", "WT", "WT", "WT", "WT", "WT", "WT", "WT"];
+            expect(chromatic.scaleOffsets).to.have.ordered.members(expectedOffsets);
+            expect(chromatic.chordQualities).to.have.ordered.members(expectedQualities);
+        });
     });
 
 
@@ -114,6 +122,11 @@ describe("Harmony", () => {
 
         it("can find scale notes for Whole Tone", () => {
             expect(Harmony.getScaleNotes("C", Scale.WholeTone)).to.have.ordered.members(["C", "D", "E", "F#", "G#", "A#"]);
+        });
+
+        it("can find scale notes for Chromatic", () => {
+            const expected = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+            expect(Harmony.getScaleNotes("C", Scale.Chromatic)).to.have.ordered.members(expected);
         });
     });
 });

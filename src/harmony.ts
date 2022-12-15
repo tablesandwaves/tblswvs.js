@@ -14,7 +14,8 @@ export enum Scale {
     Minor,
     MajPentatonic,
     MinPentatonic,
-    WholeTone
+    WholeTone,
+    Chromatic
 }
 
 
@@ -26,6 +27,7 @@ export class Harmony {
 
     static MAJOR_STEP_OFFSETS   = [2, 2, 1, 2, 2, 2, 1];
     static WHOLE_TONE_OFFSETS   = [2, 2, 2, 2, 2, 2];
+    static CHROMATIC_OFFSETS    = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
     static ABC_NOTES_MIDI_ORDER = ["C", "D", "E", "F", "G", "A", "B"];
 
 
@@ -54,6 +56,9 @@ export class Harmony {
         } else if (mode == Scale.WholeTone) {
             offsets = Harmony.WHOLE_TONE_OFFSETS;
             scaleDegreeMapping = [1, 2, 3, 4, 5, 6];
+        } else if (mode == Scale.Chromatic) {
+            offsets = Harmony.CHROMATIC_OFFSETS;
+            scaleDegreeMapping = [1, 1.5, 2, 2.5, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7];
         }
 
         return new Harmony(Harmony.cummulativeOffsets(offsets), Harmony.chordQualities(offsets), scaleDegreeMapping);
@@ -66,7 +71,7 @@ export class Harmony {
         let   scaleAbcNotes   = helpers.rotate(Harmony.ABC_NOTES_MIDI_ORDER, -Harmony.ABC_NOTES_MIDI_ORDER.indexOf(tonic[0]));
 
         if (mode.scaleDegreeMapping != undefined) {
-            scaleAbcNotes = mode.scaleDegreeMapping.map(d => scaleAbcNotes[d - 1]);
+            scaleAbcNotes = mode.scaleDegreeMapping.map(d => scaleAbcNotes[Math.floor(d) - 1]);
         }
 
         return scaleAbcNotes.map((n, i) => {
@@ -119,7 +124,10 @@ export class Harmony {
                     chordSteps.push("M/5");
                     break;
                 }
-
+                case "2:2": {
+                    chordSteps.push("WT");
+                    break;
+                }
             }
             return chordSteps;
         }, [])
