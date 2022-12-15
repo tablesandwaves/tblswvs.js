@@ -1,6 +1,6 @@
 {
   "name": "tblswvs",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Utility for opinionated processing of musical data",
   "main": "dist/tblswvs.js",
   "private": true,
