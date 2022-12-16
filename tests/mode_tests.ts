@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { Mode, Scale } from "../src/harmony";
+import { Mode, Scale } from "../src/mode";
 
 
 describe("Mode", () => {

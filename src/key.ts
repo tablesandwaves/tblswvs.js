@@ -1,4 +1,4 @@
-import { Mode, Scale } from "./harmony";
+import { Mode, Scale } from "./mode";
 import { chromaticScale, noteData } from "./note_data";
 
 

@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import { Key } from "../src/key";
-import { Scale } from "../src/harmony";
+import { Scale } from "../src/mode";
 
 
 describe("Key", () => {
