@@ -1,5 +1,4 @@
 import * as helpers from "./helpers";
-import { scaleNoteCandidates } from "./note_data";
 
 
 export enum Scale {
@@ -21,79 +20,19 @@ export enum Scale {
 
 
 export class Mode {
+    scale: Scale;
+    name: string;
+    stepOffsets: number[];
     scaleOffsets: number[];
     chordQualities: string[];
-    scaleDegreeMapping: (number[] | undefined);
+    scaleDegreeMapping: number[];
 
 
-    static MAJOR_STEP_OFFSETS   = [2, 2, 1, 2, 2, 2, 1];
-    static WHOLE_TONE_OFFSETS   = [2, 2, 2, 2, 2, 2];
-    static CHROMATIC_OFFSETS    = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-    static GS_OFFSETS           = [1, 2, 1, 1, 3, 1, 3];
-    static ABC_NOTES_MIDI_ORDER = ["C", "D", "E", "F", "G", "A", "B"];
-
-
-    constructor(scaleOffsets: number[], chordQualities: string[], scaleDegreeMapping?: number[]) {
-        this.scaleOffsets   = scaleOffsets;
-        this.chordQualities = chordQualities;
-        this.scaleDegreeMapping = scaleDegreeMapping;
-    }
-
-
-    static get(mode: Scale): Mode {
-        let _mode, offsets, scaleDegreeMapping;
-
-        _mode = (mode == Scale.Major || mode == Scale.MajPentatonic) ? Scale.Ionian : mode;
-        _mode = (mode == Scale.Minor || mode == Scale.MinPentatonic) ? Scale.Aeolian : mode;
-
-        offsets = helpers.rotate(Mode.MAJOR_STEP_OFFSETS, -_mode);
-        if (mode == Scale.MajPentatonic) {
-            offsets.splice(2, 2, 3);
-            offsets.splice(-2, 2, 3);
-            scaleDegreeMapping = [1, 2, 3, 5, 6];
-        } else if (mode == Scale.MinPentatonic) {
-            offsets.splice(0, 2, 3);
-            offsets.splice(-3, 2, 3);
-            scaleDegreeMapping = [1, 3, 4, 5, 7];
-        } else if (mode == Scale.WholeTone) {
-            offsets = Mode.WHOLE_TONE_OFFSETS;
-            scaleDegreeMapping = [1, 2, 3, 4, 5, 6];
-        } else if (mode == Scale.Chromatic) {
-            offsets = Mode.CHROMATIC_OFFSETS;
-            scaleDegreeMapping = [1, 1.5, 2, 2.5, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7];
-        } else if (mode == Scale.GS) {
-            offsets = Mode.GS_OFFSETS;
-        }
-
-        return new Mode(Mode.cummulativeOffsets(offsets), Mode.chordQualities(offsets), scaleDegreeMapping);
-    }
-
-
-    static getScaleNotes(tonic: string, scale: Scale): string[] {
-        const mode            = Mode.get(scale);
-        const rotatedAbsolute = helpers.rotate(scaleNoteCandidates, -scaleNoteCandidates.findIndex(n => n.includes(tonic)));
-        let   scaleAbcNotes   = helpers.rotate(Mode.ABC_NOTES_MIDI_ORDER, -Mode.ABC_NOTES_MIDI_ORDER.indexOf(tonic[0]));
-
-        if (mode.scaleDegreeMapping != undefined) {
-            scaleAbcNotes = mode.scaleDegreeMapping.map(d => scaleAbcNotes[Math.floor(d) - 1]);
-        }
-
-        return scaleAbcNotes.map((n, i) => {
-            const absoluteIndex = mode.scaleOffsets[i];
-            return rotatedAbsolute[absoluteIndex].find((sn: string[]) => sn[0] == n);
-        });
-    }
-
-
-    protected static cummulativeOffsets(stepOffsets: number[]) {
-        return stepOffsets.reduce((cummulativeOffsets: number[], _, i, arr) => {
-            cummulativeOffsets.push(arr.slice(0, i).reduce((sum, intv) => sum += intv, 0));
-            return cummulativeOffsets;
-        }, []);
-    }
-
-
-    static CHORD_INTERVAL_MAP: Record<string, string> = {
+    private static readonly MAJOR_STEP_OFFSETS   = [2, 2, 1, 2, 2, 2, 1];
+    private static readonly WHOLE_TONE_OFFSETS   = [2, 2, 2, 2, 2, 2];
+    private static readonly CHROMATIC_OFFSETS    = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    private static readonly GS_OFFSETS           = [1, 2, 1, 1, 3, 1, 3];
+    private static readonly CHORD_INTERVAL_MAP: Record<string, string> = {
         "4:3": "M",
         "3:4": "m",
         "3:3": "dim",
@@ -104,6 +43,53 @@ export class Mode {
         "5:4": "M/5",
         "2:2": "WT",
         "3:2": "m5bb"
+    }
+
+
+    constructor(scale: Scale) {
+        this.scale = scale;
+        this.name = Scale[scale];
+
+        [this.stepOffsets, this.scaleDegreeMapping] = this.#offsetsScaleDegreeMapping(scale);
+        this.scaleOffsets = Mode.cummulativeOffsets(this.stepOffsets);
+        this.chordQualities = Mode.chordQualities(this.stepOffsets);
+    }
+
+
+    #offsetsScaleDegreeMapping(scale: Scale): number[][] {
+        let _scale, stepOffsets, scaleDegreeMapping: number[] = new Array();
+
+        _scale = (scale == Scale.Major || scale == Scale.MajPentatonic) ? Scale.Ionian : scale;
+        _scale = (scale == Scale.Minor || scale == Scale.MinPentatonic) ? Scale.Aeolian : scale;
+
+        stepOffsets = helpers.rotate(Mode.MAJOR_STEP_OFFSETS, -_scale);
+        if (scale == Scale.MajPentatonic) {
+            stepOffsets.splice(2, 2, 3);
+            stepOffsets.splice(-2, 2, 3);
+            scaleDegreeMapping = [1, 2, 3, 5, 6];
+        } else if (scale == Scale.MinPentatonic) {
+            stepOffsets.splice(0, 2, 3);
+            stepOffsets.splice(-3, 2, 3);
+            scaleDegreeMapping = [1, 3, 4, 5, 7];
+        } else if (scale == Scale.WholeTone) {
+            stepOffsets = Mode.WHOLE_TONE_OFFSETS;
+            scaleDegreeMapping = [1, 2, 3, 4, 5, 6];
+        } else if (scale == Scale.Chromatic) {
+            stepOffsets = Mode.CHROMATIC_OFFSETS;
+            scaleDegreeMapping = [1, 1.5, 2, 2.5, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7];
+        } else if (scale == Scale.GS) {
+            stepOffsets = Mode.GS_OFFSETS;
+        }
+
+        return [stepOffsets, scaleDegreeMapping];
+    }
+
+
+    protected static cummulativeOffsets(stepOffsets: number[]) {
+        return stepOffsets.reduce((cummulativeOffsets: number[], _, i, arr) => {
+            cummulativeOffsets.push(arr.slice(0, i).reduce((sum, intv) => sum += intv, 0));
+            return cummulativeOffsets;
+        }, []);
     }
 
 

@@ -14,10 +14,13 @@ export const scaleNoteCandidates: string[][] = [
 ];
 
 
+export const abcNotesMidiOrder = ["C", "D", "E", "F", "G", "A", "B"];
+
+
 export const chromaticScale: string[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 
-type note = {
+export type note = {
   octave: number,
   note: string,
   midi: number
