@@ -20,10 +20,57 @@ export const abcNotesMidiOrder = ["C", "D", "E", "F", "G", "A", "B"];
 export const chromaticScale: string[] = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 
+export const chordNumeralsMap: Record<number, string> = {
+  1: "I",
+  2: "II",
+  3: "III",
+  4: "IV",
+  5: "V",
+  6: "VI",
+  7: "VII",
+  8: "VIII",
+  9: "IX",
+  10: "X",
+  11: "XI",
+  12: "XII"
+}
+
+
 export type note = {
   octave: number,
   note: string,
   midi: number
+}
+
+
+export type chord = {
+  midi: number[],
+  quality: string,
+  root: string,
+  degree: string
+}
+
+
+export type chordSpec = {
+  intervals: number[]
+}
+
+
+export const chordTypes: Record<string, chordSpec> = {
+  "oct":    {intervals: [0, 12]},
+  "pow":    {intervals: [0, 7]},
+  "M":      {intervals: [0, 4, 7]},
+  "m":      {intervals: [0, 3, 7]},
+  "dim":    {intervals: [0, 3, 6]},
+  "aug":    {intervals: [0, 4, 8]},
+  "sus2":   {intervals: [0, 2, 7]},
+  "sus4":   {intervals: [0, 5, 7]},
+  "m/3":    {intervals: [0, 4, 9]},
+  "sus25b": {intervals: [0, 2, 6]},
+  "sus2/2": {intervals: [0, 5, 10]},
+  "M/5":    {intervals: [0, 5, 9]},
+  "WT":     {intervals: [0, 2, 4]},
+  "m5bb":   {intervals: [0, 3, 5]}
 }
 
 
