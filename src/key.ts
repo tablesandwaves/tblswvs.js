@@ -44,11 +44,19 @@ export class Key {
     }
 
 
-    chord(degree: number, type: string): noteData.chord {
+    chord(degree: number, type: string, octaveTransposition?: number): noteData.chord {
         let quality = (type == "T") ? this.mode.chordQualities[degree - 1] : type;
 
+        /*
+         * octaveTransposition: the calling client may request transposition (-/+)
+         * this.midiTonic: scale pitch class (0-11)
+         * this.octave * 12: the Key has a default lowest octave
+         * + 24: lowest MIDI octave, -2, means this.octave*12 could be as low as -24, which should be brought up to MIDI note 0
+         */
+        let midiTransposition = (octaveTransposition == undefined ? 0 : octaveTransposition * 12) + this.midiTonic + (this.octave * 12) + 24;
+
         let midi = noteData.chordTypes[quality].intervals.reduce((midiNotes: number[], intv: number) => {
-            midiNotes.push(intv + this.mode.scaleOffsets[degree - 1] + this.midiTonic + (this.octave * 12) + 24);
+            midiNotes.push(intv + this.mode.scaleOffsets[degree - 1] + midiTransposition);
             return midiNotes;
         }, []);
 
