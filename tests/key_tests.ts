@@ -54,27 +54,27 @@ describe("Key", () => {
 
         describe("in a diatonic scale, it finds", () => {
             it("octave", () => {
-                expect(cMajor.chord(1, "oct")).to.deep.include({midi: [36, 48], quality: "oct", root: "C", degree: "1oct"})
+                expect(cMajor.chord(1, "oct")).to.deep.include({midi: [36, 48], quality: "oct", root: "C", degree: "1oct", keyTransposition: 0});
             });
 
             it("power", () => {
-                expect(cMajor.chord(2, "pow")).to.deep.include({midi: [38, 45], quality: "pow", root: "D", degree: "2pow"})
+                expect(cMajor.chord(2, "pow")).to.deep.include({midi: [38, 45], quality: "pow", root: "D", degree: "2pow", keyTransposition: 0});
             });
 
             it("major triads", () => {
-                expect(cMajor.chord(1, "T")).to.deep.include({midi: [36, 40, 43], quality: "M", root: "C", degree: "I"});
-                expect(cMajor.chord(4, "T")).to.deep.include({midi: [41, 45, 48], quality: "M", root: "F", degree: "IV"});
-                expect(cMajor.chord(5, "T")).to.deep.include({midi: [43, 47, 50], quality: "M", root: "G", degree: "V"});
+                expect(cMajor.chord(1, "T")).to.deep.include({midi: [36, 40, 43], quality: "M", root: "C", degree: "I", keyTransposition: 0});
+                expect(cMajor.chord(4, "T")).to.deep.include({midi: [41, 45, 48], quality: "M", root: "F", degree: "IV", keyTransposition: 0});
+                expect(cMajor.chord(5, "T")).to.deep.include({midi: [43, 47, 50], quality: "M", root: "G", degree: "V", keyTransposition: 0});
             });
 
             it("minor triads", () => {
-                expect(cMajor.chord(2, "T")).to.deep.include({midi: [38, 41, 45], quality: "m", root: "D", degree: "ii"});
-                expect(cMajor.chord(3, "T")).to.deep.include({midi: [40, 43, 47], quality: "m", root: "E", degree: "iii"});
-                expect(cMajor.chord(6, "T")).to.deep.include({midi: [45, 48, 52], quality: "m", root: "A", degree: "vi"});
+                expect(cMajor.chord(2, "T")).to.deep.include({midi: [38, 41, 45], quality: "m", root: "D", degree: "ii", keyTransposition: 0});
+                expect(cMajor.chord(3, "T")).to.deep.include({midi: [40, 43, 47], quality: "m", root: "E", degree: "iii", keyTransposition: 0});
+                expect(cMajor.chord(6, "T")).to.deep.include({midi: [45, 48, 52], quality: "m", root: "A", degree: "vi", keyTransposition: 0});
             });
 
             it("diminished triad", () => {
-                expect(cMajor.chord(7, "T")).to.deep.include({midi: [47, 50, 53], quality: "dim", root: "B", degree: "viio"})
+                expect(cMajor.chord(7, "T")).to.deep.include({midi: [47, 50, 53], quality: "dim", root: "B", degree: "viio", keyTransposition: 0})
             });
         });
 
@@ -86,43 +86,43 @@ describe("Key", () => {
             const cGS        = new Key("C", Scale.GS);
 
             it("finds a minor slash chord", () => {
-                expect(cMajPent.chord(1, "T")).to.deep.include({midi: [36, 40, 45], quality: "m/3", root: "A", degree: "i/3"});
+                expect(cMajPent.chord(1, "T")).to.deep.include({midi: [36, 40, 45], quality: "m/3", root: "A", degree: "i/3", keyTransposition: 0});
             });
 
             it("finds a sus2 slash chord", () => {
-                expect(cMajPent.chord(2, "T")).to.deep.include({midi: [38, 43, 48], quality: "sus2/2", root: "C", degree: "IIsus2/2"});
-                expect(cMajPent.chord(3, "T")).to.deep.include({midi: [40, 45, 50], quality: "sus2/2", root: "D", degree: "IIIsus2/2"});
-                expect(cMajPent.chord(5, "T")).to.deep.include({midi: [45, 50, 55], quality: "sus2/2", root: "G", degree: "Vsus2/2"});
+                expect(cMajPent.chord(2, "T")).to.deep.include({midi: [38, 43, 48], quality: "sus2/2", root: "C", degree: "IIsus2/2", keyTransposition: 0});
+                expect(cMajPent.chord(3, "T")).to.deep.include({midi: [40, 45, 50], quality: "sus2/2", root: "D", degree: "IIIsus2/2", keyTransposition: 0});
+                expect(cMajPent.chord(5, "T")).to.deep.include({midi: [45, 50, 55], quality: "sus2/2", root: "G", degree: "Vsus2/2", keyTransposition: 0});
             });
 
             it("finds a major slash chord", () => {
-                expect(cMajPent.chord(4, "T")).to.deep.include({midi: [43, 48, 52], quality: "M/5", root: "C", degree: "IV/5"});
+                expect(cMajPent.chord(4, "T")).to.deep.include({midi: [43, 48, 52], quality: "M/5", root: "C", degree: "IV/5", keyTransposition: 0});
             });
 
             it("finds an augmented chord", () => {
-                expect(cWT.chord(1, "T")).to.deep.include({midi: [36, 40, 44], quality: "aug", root: "C", degree: "I+"});
-                expect(cWT.chord(2, "T")).to.deep.include({midi: [38, 42, 46], quality: "aug", root: "D", degree: "II+"});
+                expect(cWT.chord(1, "T")).to.deep.include({midi: [36, 40, 44], quality: "aug", root: "C", degree: "I+", keyTransposition: 0});
+                expect(cWT.chord(2, "T")).to.deep.include({midi: [38, 42, 46], quality: "aug", root: "D", degree: "II+", keyTransposition: 0});
             });
 
             it("finds a whole tone chord", () => {
-                expect(cChromatic.chord(1, "T")).to.deep.include({midi: [36, 38, 40], quality: "WT", root: "C", degree: "iWT"});
-                expect(cChromatic.chord(2, "T")).to.deep.include({midi: [37, 39, 41], quality: "WT", root: "C#", degree: "iiWT"});
+                expect(cChromatic.chord(1, "T")).to.deep.include({midi: [36, 38, 40], quality: "WT", root: "C", degree: "iWT", keyTransposition: 0});
+                expect(cChromatic.chord(2, "T")).to.deep.include({midi: [37, 39, 41], quality: "WT", root: "C#", degree: "iiWT", keyTransposition: 0});
             });
 
             it("finds a chord with a flatted degree", () => {
-                expect(cGS.chord(1, "T")).to.deep.include({midi: [36, 39, 41], quality: "m5bb", root: "C", degree: "i5bb"});
-                expect(cGS.chord(3, "T")).to.deep.include({midi: [39, 41, 45], quality: "sus25b", root: "Eb", degree: "IIIsus25b"});
+                expect(cGS.chord(1, "T")).to.deep.include({midi: [36, 39, 41], quality: "m5bb", root: "C", degree: "i5bb", keyTransposition: 0});
+                expect(cGS.chord(3, "T")).to.deep.include({midi: [39, 41, 45], quality: "sus25b", root: "Eb", degree: "IIIsus25b", keyTransposition: 0});
             });
         });
 
 
         describe("with transpositions", () => {
             it("can shift the chord to a higher octave", () => {
-                expect(cMajor.chord(1, "T", 2)).to.deep.include({midi: [60, 64, 67], quality: "M", root: "C", degree: "I"});
+                expect(cMajor.chord(1, "T", 2)).to.deep.include({midi: [60, 64, 67], quality: "M", root: "C", degree: "I", keyTransposition: 2});
             });
 
             it("can shift the chord to a lower octave", () => {
-                expect(cMajor.chord(1, "T", -1)).to.deep.include({midi: [24, 28, 31], quality: "M", root: "C", degree: "I"});
+                expect(cMajor.chord(1, "T", -1)).to.deep.include({midi: [24, 28, 31], quality: "M", root: "C", degree: "I", keyTransposition: -1});
             });
         });
     });

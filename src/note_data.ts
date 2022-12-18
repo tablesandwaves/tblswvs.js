@@ -47,7 +47,8 @@ export type chord = {
   midi: number[],
   quality: string,
   root: string,
-  degree: string
+  degree: string,
+  keyTransposition: number
 }
 
 

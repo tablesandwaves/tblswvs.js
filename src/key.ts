@@ -64,7 +64,8 @@ export class Key {
             midi: midi,
             quality: quality,
             root: this.#calculateChordRoot(midi, quality),
-            degree: this.#calculateChordDegree(quality, degree)
+            degree: this.#calculateChordDegree(quality, degree),
+            keyTransposition: octaveTransposition == undefined ? 0 : octaveTransposition
         }
     }
 
