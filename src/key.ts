@@ -49,17 +49,21 @@ export class Key {
 
 
     #negativeDegree(d: number): noteData.note {
-
         // For negative indices, start by getting the step offsets in reverse order...
-        let revCopy  = this.mode.stepOffsets.slice().reverse();
+        let revCopy = this.mode.stepOffsets.slice().reverse();
+
         // Then determine how many copies of the array are needed to index the current scale degree
         // (e.g., -8 for C Major would be the second B, so copies should be 2)
-        let copies   = Math.ceil(-d / revCopy.length);
+        let copies = Math.ceil(-d / revCopy.length);
+
         // Create a version of the reversed step offsets that can reach the scale degree needed.
         let expanded = new Array(copies).fill(revCopy).flat();
 
-        // Finally, subtract negative offsets from the current Key's root.
-        return noteData.noteData[this.octave * 12 + this.midiTonic + 24 - expanded.slice(0, -d).reduce((total, offset) => total += offset, 0)];
+        // Finally, subtract negative offsets from the current Key's root and correct the default sharps to flats as needed.
+        let degree = noteData.noteData[this.octave * 12 + this.midiTonic + 24 - expanded.slice(0, -d).reduce((total, offset) => total += offset, 0)];
+        degree.note = this.scaleNotes.at(d % this.scaleNotes.length)!;
+
+        return degree;
     }
 
 

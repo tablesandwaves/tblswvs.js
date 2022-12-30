@@ -63,6 +63,11 @@ describe("Key", () => {
             expect(dDorian.degree(-8)).to.include({octave: 0, note: "C", midi: 24});
             expect(dDorian.degree(-9)).to.include({octave: -1, note: "B", midi: 23});
         });
+
+        it("replaces a generic sharp note with the scale flat for negative scale degrees", () => {
+            expect(new Key("C", Scale.Minor).degree(-1)).to.include({octave: 0, note: "Bb", midi: 34});
+            expect(new Key("C", Scale.Minor).degree(-9)).to.include({octave: -1, note: "Ab", midi: 20});
+        });
     });
 
 
