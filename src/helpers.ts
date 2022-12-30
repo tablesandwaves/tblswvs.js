@@ -11,6 +11,10 @@ export const SELF_SIMILARITY_REQUIRES_COPRIMES =
     "A self-similar melody can only be produced for an input sequence length " +
     "that is coprime with the output sequence length";
 
+export const SCALE_DEGREE_ERROR =
+    "Scale degrees must be negative or positive, but not 0";
+
+
 export const unique = (value: any, index: number, self: any) => {
     return self.indexOf(value) === index;
 }

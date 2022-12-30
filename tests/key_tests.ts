@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import { Key } from "../src/key";
 import { Scale } from "../src/mode";
+import { TblswvsError } from "../src/tblswvs_error";
 
 
 describe("Key", () => {
@@ -28,6 +29,10 @@ describe("Key", () => {
     describe("when getting a key's scale degrees", () => {
         let dDorian = new Key("D", Scale.Dorian);
 
+        it("returns an error for scale degree 0", () => {
+            expect(() => { return dDorian.degree(0) }).to.throw(TblswvsError, "Scale degrees must be negative or positive, but not 0");
+        });
+
         it("knows its scale degrees by numeric accessor", () => {
             expect(dDorian.degree(1)).to.include({octave: 1, note: "D", midi: 38});
             expect(dDorian.degree(2)).to.include({octave: 1, note: "E", midi: 40});
@@ -45,6 +50,18 @@ describe("Key", () => {
         it("gets the next octave when the degree is higher than the scale's length", () => {
             expect(new Key("C", Scale.Major).degree(9)).to.include({octave: 2, note: "D", midi: 50});
             expect(new Key("E", Scale.MinPentatonic).degree(6)).to.include({octave: 2, note: "E", midi: 52});
+        });
+
+        it("can index scale degrees in reverse order when the degree is less than 0", () => {
+            expect(dDorian.degree(-1)).to.include({octave: 1, note: "C", midi: 36});
+            expect(dDorian.degree(-2)).to.include({octave: 0, note: "B", midi: 35});
+            expect(dDorian.degree(-3)).to.include({octave: 0, note: "A", midi: 33});
+            expect(dDorian.degree(-4)).to.include({octave: 0, note: "G", midi: 31});
+            expect(dDorian.degree(-5)).to.include({octave: 0, note: "F", midi: 29});
+            expect(dDorian.degree(-6)).to.include({octave: 0, note: "E", midi: 28});
+            expect(dDorian.degree(-7)).to.include({octave: 0, note: "D", midi: 26});
+            expect(dDorian.degree(-8)).to.include({octave: 0, note: "C", midi: 24});
+            expect(dDorian.degree(-9)).to.include({octave: -1, note: "B", midi: 23});
         });
     });
 

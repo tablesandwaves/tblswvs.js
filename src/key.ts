@@ -1,7 +1,7 @@
 import { Mode, Scale } from "./mode";
-// import { note, chord, chordTypes, chromaticScale, noteData, scaleNoteCandidates, abcNotesMidiOrder } from "./note_data";
 import * as noteData from "./note_data";
 import * as helpers from "./helpers";
+import { TblswvsError } from "./tblswvs_error";
 
 
 export class Key {
@@ -34,6 +34,10 @@ export class Key {
 
 
     degree(d: number): noteData.note {
+        if (d == 0) throw new TblswvsError(helpers.SCALE_DEGREE_ERROR);
+
+        if (d < 0) return this.#negativeDegree(d);
+
         // The degree octave may start higher than the current key's octave (e.g., the 9th in a diatonic scale)
         let degreeOctave = this.octave + Math.floor((d - 1) / this.scaleNotes.length);
         let degree = noteData.noteData[this.mode.scaleOffsets[(d - 1) % this.scaleNotes.length] + this.midiTonic + (degreeOctave * 12) + 24];
@@ -41,6 +45,21 @@ export class Key {
         // the default sharp for noteData.
         degree.note = this.scaleNotes[(d - 1) % this.scaleNotes.length];
         return degree;
+    }
+
+
+    #negativeDegree(d: number): noteData.note {
+
+        // For negative indices, start by getting the step offsets in reverse order...
+        let revCopy  = this.mode.stepOffsets.slice().reverse();
+        // Then determine how many copies of the array are needed to index the current scale degree
+        // (e.g., -8 for C Major would be the second B, so copies should be 2)
+        let copies   = Math.ceil(-d / revCopy.length);
+        // Create a version of the reversed step offsets that can reach the scale degree needed.
+        let expanded = new Array(copies).fill(revCopy).flat();
+
+        // Finally, subtract negative offsets from the current Key's root.
+        return noteData.noteData[this.octave * 12 + this.midiTonic + 24 - expanded.slice(0, -d).reduce((total, offset) => total += offset, 0)];
     }
 
 
