@@ -46,3 +46,14 @@ export const rotate = (arr: any[], offset: number): any[] => {
     }
     return copy;
 }
+
+
+export const inversionMap = (range: (number|number[])): Map<number, number> => {
+    let map = new Map();
+
+    const intervals: number[] = (Array.isArray(range)) ? range.filter(unique).sort() : [...new Array(range).keys()].map(i => i + 1);
+    for (let i = 0; i < intervals.length; i++)
+        map.set(intervals[i], intervals[intervals.length - i - 1]);
+
+    return map;
+}
