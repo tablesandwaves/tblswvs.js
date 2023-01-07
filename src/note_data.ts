@@ -39,7 +39,8 @@ export const chordNumeralsMap: Record<number, string> = {
 export type note = {
   octave: number,
   note: string,
-  midi: number
+  midi: number,
+  scaleDegree?: number
 }
 
 

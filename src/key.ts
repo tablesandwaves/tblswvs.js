@@ -33,22 +33,28 @@ export class Key {
     }
 
 
-    degree(d: number): noteData.note {
+    degree(d: number, octaveTranspose?: number): noteData.note {
         if (d == 0) throw new TblswvsError(helpers.SCALE_DEGREE_ERROR);
 
-        if (d < 0) return this.#negativeDegree(d);
+        if (d < 0) return this.#negativeDegree(d, octaveTranspose);
 
         // The degree octave may start higher than the current key's octave (e.g., the 9th in a diatonic scale)
         let degreeOctave = this.octave + Math.floor((d - 1) / this.scaleNotes.length);
-        let degree = noteData.noteData[this.mode.scaleOffsets[(d - 1) % this.scaleNotes.length] + this.midiTonic + (degreeOctave * 12) + 24];
+        const noteIndex = this.mode.scaleOffsets[(d - 1) % this.scaleNotes.length] + this.midiTonic + (degreeOctave * 12) + 24;
+        let degree = { ...noteData.noteData[noteIndex] };
         // Reset the generic note to the scale notes to correctly identify when a scale degree should be a flat, rather than
         // the default sharp for noteData.
         degree.note = this.scaleNotes[(d - 1) % this.scaleNotes.length];
+        degree.scaleDegree = d;
+        if (octaveTranspose != undefined) {
+            degree.octave += octaveTranspose;
+            degree.midi   += (octaveTranspose * 12);
+        }
         return degree;
     }
 
 
-    #negativeDegree(d: number): noteData.note {
+    #negativeDegree(d: number, octaveTranspose?: number): noteData.note {
         // For negative indices, start by getting the step offsets in reverse order...
         let revCopy = this.mode.stepOffsets.slice().reverse();
 
@@ -60,8 +66,14 @@ export class Key {
         let expanded = new Array(copies).fill(revCopy).flat();
 
         // Finally, subtract negative offsets from the current Key's root and correct the default sharps to flats as needed.
-        let degree = noteData.noteData[this.octave * 12 + this.midiTonic + 24 - expanded.slice(0, -d).reduce((total, offset) => total += offset, 0)];
+        const noteIndex = this.octave * 12 + this.midiTonic + 24 - expanded.slice(0, -d).reduce((total, offset) => total += offset, 0);
+        let degree = { ...noteData.noteData[noteIndex] };
         degree.note = this.scaleNotes.at(d % this.scaleNotes.length)!;
+        degree.scaleDegree = d;
+        if (octaveTranspose != undefined) {
+            degree.octave += octaveTranspose;
+            degree.midi   += (octaveTranspose * 12);
+        }
 
         return degree;
     }
@@ -96,13 +108,13 @@ export class Key {
     #calculateChordRoot(chordMidi: number[], chordQuality: string): string {
         let inversion = chordQuality.split("/")[1];
         if (inversion == undefined) {
-            return noteData.noteData[chordMidi[0]].note;
+            return this.midi2note(chordMidi[0]).replace(/[0-9]/g, "");
         } else if (inversion == "2" || inversion == "3" || inversion == "4") {
-            return noteData.noteData[chordMidi[2]].note;
+            return this.midi2note(chordMidi[2]).replace(/[0-9]/g, "");
         } else if (inversion == "5") {
-            return noteData.noteData[chordMidi[1]].note;
+            return this.midi2note(chordMidi[1]).replace(/[0-9]/g, "");
         } else {
-            return noteData.noteData[chordMidi[0]].note;
+            return this.midi2note(chordMidi[0]).replace(/[0-9]/g, "");
         }
     }
 

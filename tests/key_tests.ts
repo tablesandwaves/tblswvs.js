@@ -68,11 +68,17 @@ describe("Key", () => {
             expect(new Key("C", Scale.Minor).degree(-1)).to.include({octave: 0, note: "Bb", midi: 34});
             expect(new Key("C", Scale.Minor).degree(-9)).to.include({octave: -1, note: "Ab", midi: 20});
         });
+
+        it("can be given an optional octave transposition", () => {
+            expect(dDorian.degree(1, 1)).to.include({octave: 2, note: "D", midi: 50});
+            expect(dDorian.degree(-1, 1)).to.include({octave: 2, note: "C", midi: 48});
+        });
     });
 
 
     describe("when generating chords", () => {
         let cMajor = new Key("C", Scale.Major);
+        let cMinor = new Key("C", Scale.Minor);
 
         describe("in a diatonic scale, it finds", () => {
             it("octave", () => {
@@ -96,7 +102,11 @@ describe("Key", () => {
             });
 
             it("diminished triad", () => {
-                expect(cMajor.chord(7, "T")).to.deep.include({midi: [47, 50, 53], quality: "dim", root: "B", degree: "viio", keyTransposition: 0})
+                expect(cMajor.chord(7, "T")).to.deep.include({midi: [47, 50, 53], quality: "dim", root: "B", degree: "viio", keyTransposition: 0});
+            });
+
+            it("roots that are flat", () => {
+                expect(cMinor.chord(3, "T")).to.deep.include({midi: [39, 43, 46], quality: "M", root: "Eb", degree: "III", keyTransposition: 0});
             });
         });
 
