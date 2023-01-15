@@ -28,6 +28,7 @@ describe("Key", () => {
 
     describe("when getting a key's scale degrees", () => {
         let dDorian = new Key("D", Scale.Dorian);
+        let cMinor  = new Key(60, Scale.Minor);
 
         it("returns an error for scale degree 0", () => {
             expect(() => { return dDorian.degree(0) }).to.throw(TblswvsError, "Scale degrees must be negative or positive, but not 0");
@@ -72,6 +73,18 @@ describe("Key", () => {
         it("can be given an optional octave transposition", () => {
             expect(dDorian.degree(1, 1)).to.include({octave: 2, note: "D", midi: 50});
             expect(dDorian.degree(-1, 1)).to.include({octave: 2, note: "C", midi: 48});
+        });
+
+        it("can index negative scale degrees for scales with flatted note names", () => {
+            expect(cMinor.degree(-1)).to.include({octave: 2, note: "Bb", midi: 58});
+            expect(cMinor.degree(-2)).to.include({octave: 2, note: "Ab", midi: 56});
+            expect(cMinor.degree(-3)).to.include({octave: 2, note: "G", midi: 55});
+            expect(cMinor.degree(-4)).to.include({octave: 2, note: "F", midi: 53});
+            expect(cMinor.degree(-5)).to.include({octave: 2, note: "Eb", midi: 51});
+            expect(cMinor.degree(-6)).to.include({octave: 2, note: "D", midi: 50});
+            expect(cMinor.degree(-7)).to.include({octave: 2, note: "C", midi: 48});
+            expect(cMinor.degree(-8)).to.include({octave: 1, note: "Bb", midi: 46});
+            expect(cMinor.degree(-9)).to.include({octave: 1, note: "Ab", midi: 44});
         });
     });
 
