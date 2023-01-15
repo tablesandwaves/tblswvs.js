@@ -44,5 +44,16 @@ describe("tblswvs.util", () => {
             expect(map.get(67)).to.equal(63);
             expect(map.get(72)).to.equal(60);
         });
+
+        /**
+         * While not substantively different from the numeric array map above,
+         * this is a reminder that when creating an interval map for negative
+         * intervals to simply supply the array in this manner.
+         */
+        it("produces a lookup map for an array with negative numbers", () => {
+            const map = util.inversionMap([-1, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            expect(map.get(-1)).to.equal(9);
+            expect(map.get(9)).to.equal(-1);;
+        });
     });
 });

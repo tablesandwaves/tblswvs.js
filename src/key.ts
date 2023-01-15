@@ -13,6 +13,9 @@ export class Key {
     midiTonic:  number;
     octave:     number;
     scaleNotes: string[];
+    inversions: Map<number, number>;
+    inversionMin: number;
+    inversionMax: number;
 
 
     constructor(tonic: (number | string), scale: Scale) {
@@ -30,6 +33,10 @@ export class Key {
         this.scaleName = Scale[scale];
         this.name = `${this.tonic} ${this.scaleName}`
         this.scaleNotes = this.#calculateScaleNotes();
+        this.inversions = this.#calculateInversions();
+        const inversionRange = Array.from(this.inversions.keys()).sort((a, b) => a - b);
+        this.inversionMin = inversionRange[0];
+        this.inversionMax = inversionRange[inversionRange.length - 1];
     }
 
 
@@ -166,5 +173,35 @@ export class Key {
             const absoluteIndex = this.mode.scaleOffsets[i];
             return rotatedAbsolute[absoluteIndex].find((sn: string[]) => sn[0] == n);
         });
+    }
+
+
+    degreeInversion(scaleDegree: number): noteData.note {
+        if (scaleDegree < this.inversionMin) scaleDegree = this.inversionMin;
+        else if (scaleDegree > this.inversionMax) scaleDegree = this.inversionMax;
+
+        const invertedScaleDegree = this.inversions.get(scaleDegree);
+        if (invertedScaleDegree == undefined)
+            return {octave: -3, note: "", midi: -1};
+        else
+            return this.degree(invertedScaleDegree);
+    }
+
+
+    /**
+     * Will generate a scale degree inversion map for the current key. Will included an octave above and below.
+     *
+     * @returns Map of inversion numbers
+     */
+    #calculateInversions(): Map<number, number> {
+        const positiveDegrees = [...new Array(this.mode.stepOffsets.length * 2 + 1).keys()].map(d => d + 1);
+        const negativeDegrees = positiveDegrees.slice(0, this.mode.stepOffsets.length).reverse().map(d => d * -1);
+        this.inversionMin = negativeDegrees[0];
+        this.inversionMax = positiveDegrees[positiveDegrees.length - 1];
+
+        const blerg = negativeDegrees.concat(positiveDegrees);
+        return helpers.inversionMap(
+            blerg
+        );
     }
 }

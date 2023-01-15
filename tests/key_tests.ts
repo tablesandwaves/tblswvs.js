@@ -89,6 +89,36 @@ describe("Key", () => {
     });
 
 
+    describe("when generating inversions for scale degree intervals", () => {
+        let cMinor  = new Key(60, Scale.Minor);
+
+        it("finds the inversions within the root octave", () => {
+            expect(cMinor.degreeInversion(1)).to.include({octave: 4, note: "C", midi: 72});
+            expect(cMinor.degreeInversion(2)).to.include({octave: 3, note: "Bb", midi: 70});
+            expect(cMinor.degreeInversion(3)).to.include({octave: 3, note: "Ab", midi: 68});
+            expect(cMinor.degreeInversion(4)).to.include({octave: 3, note: "G", midi: 67});
+            expect(cMinor.degreeInversion(5)).to.include({octave: 3, note: "F", midi: 65});
+            expect(cMinor.degreeInversion(6)).to.include({octave: 3, note: "Eb", midi: 63});
+            expect(cMinor.degreeInversion(7)).to.include({octave: 3, note: "D", midi: 62});
+            expect(cMinor.degreeInversion(8)).to.include({octave: 3, note: "C", midi: 60});
+        });
+
+        it("has an inversion range of +/- one octave around the Key's root octave", () => {
+            expect(cMinor.degreeInversion(-1)).to.include({octave: 4, note: "D", midi: 74});
+            expect(cMinor.degreeInversion(9)).to.include({octave: 2, note: "Bb", midi: 58});
+            expect(cMinor.degreeInversion(-7)).to.include({octave: 5, note: "C", midi: 84});
+            expect(cMinor.degreeInversion(15)).to.include({octave: 2, note: "C", midi: 48});
+        });
+
+        it("clamps intervals outside of the +/- 1 octave range to range low/high and inverts them", () => {
+            expect(cMinor.degreeInversion(-8)).to.include({octave: 5, note: "C", midi: 84});
+            expect(cMinor.degreeInversion(-24)).to.include({octave: 5, note: "C", midi: 84});
+            expect(cMinor.degreeInversion(16)).to.include({octave: 2, note: "C", midi: 48});
+            expect(cMinor.degreeInversion(24)).to.include({octave: 2, note: "C", midi: 48});
+        });
+    });
+
+
     describe("when generating chords", () => {
         let cMajor = new Key("C", Scale.Major);
         let cMinor = new Key("C", Scale.Minor);
