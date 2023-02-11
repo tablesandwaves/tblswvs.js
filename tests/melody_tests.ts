@@ -147,5 +147,13 @@ describe("Melody", () => {
         it("can generate an arbitrary portion for any seed", () => {
             expect(Melody.infinitySeries([0, 3], 4, 4).steps).to.have.ordered.members(seqquence_0_3.slice(4, 8));
         });
+
+        it("produces a melody that defaults to -1 MIDI rest symbol", () => {
+            expect(Melody.infinitySeries().restSymbol).to.equal(-1);
+        });
+
+        it("produces a melody that defaults to MIDI steps mode", () => {
+            expect(Melody.infinitySeries().melodicMode).to.equal(MelodyType.MIDI);
+        });
     });
 });

@@ -192,7 +192,7 @@ export class Melody implements Sequence {
      * @returns a Melody with the infinity series as its steps
      */
     static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number = 0) {
-        let   melody = new Melody();
+        let   melody = new Melody(seed, -1, MelodyType.MIDI);
         const root   = seed[0];
         const step1  = seed[1];
         const seedInterval = step1 - root;
