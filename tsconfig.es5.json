@@ -3,10 +3,11 @@
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "es6",
+    "module": "CommonJS",
     "target": "es6",
-    "outDir": "./dist/lib/es6",
-    "moduleResolution": "node"
+    "outDir": "./dist/lib/es5",
+    "moduleResolution": "node",
+    "declaration": true
   },
   "include": ["./src/**/*"],
   "exclude": [

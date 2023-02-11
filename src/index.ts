@@ -1,21 +1,8 @@
-// Note: using an import will still build, but Max's node processor cannot see the properties.
-// Using require() instead.
-const melody  = require("./melody");
-const harmony = require("./mode");
-const key     = require("./key");
-const vector  = require("./melodic_vector");
-const rhythm  = require("./rhythm");
-const lsystem = require("./lindenmayer_system");
-const markov  = require("./markov_chain");
-const util    = require("./helpers");
-
-module.exports.MelodyType        = melody.MelodyType;
-module.exports.Melody            = melody.Melody;
-module.exports.Mode              = harmony.Mode;
-module.exports.Scale             = harmony.Scale;
-module.exports.Key               = key.Key;
-module.exports.MelodicVector     = vector.MelodicVector;
-module.exports.Rhythm            = rhythm.Rhythm;
-module.exports.LindenmayerSystem = lsystem.LindenmayerSystem;
-module.exports.MarkovChain       = markov.MarkovChain;
-module.exports.util              = util;
+export * from "./melody";
+export * from "./mode";
+export * from "./key";
+export * from "./melodic_vector";
+export * from "./rhythm";
+export * from "./lindenmayer_system";
+export * from "./markov_chain";
+export * from "./helpers";

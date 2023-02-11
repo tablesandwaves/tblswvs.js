@@ -1,0 +1,23 @@
+{
+  "name": "tblswvs",
+  "version": "0.1.0",
+  "description": "Utility for opinionated processing of musical data",
+  "main": "lib/es5/index.js",
+  "module": "lib/es6/index.js",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tablesandwaves/tblswvs.js"
+  },
+  "files": [
+    "lib",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "keywords": [
+    "generative",
+    "music"
+  ],
+  "author": "Tables & Waves"
+}
