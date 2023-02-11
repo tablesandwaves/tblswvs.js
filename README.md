@@ -6,6 +6,12 @@ Utility for opinionated processing of musical data.
 
 This library provides a selection of musical algorithms for generative music. This project is currently (2023-02-11) under active development and therefore the best place to understand its API will be the [test suite](tests/).
 
+### Installation
+
+```bash
+$ npm install tblswvs
+```
+
 ### Example
 
 Given the script:
