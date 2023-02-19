@@ -1,6 +1,6 @@
 {
   "name": "tblswvs",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "Utility for opinionated processing of musical data",
   "main": "lib/es5/index.js",
   "module": "lib/es6/index.js",

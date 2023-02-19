@@ -6,3 +6,4 @@ export * from "./rhythm";
 export * from "./lindenmayer_system";
 export * from "./markov_chain";
 export * from "./helpers";
+export * from "./note_data";
