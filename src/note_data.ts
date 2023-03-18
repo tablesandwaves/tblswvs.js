@@ -36,6 +36,10 @@ export const chordNumeralsMap: Record<number, string> = {
 }
 
 
+/**
+ * Either a MIDI note-like thing or a rest. A note should have a note property like "C", "C#" or "Gb".
+ * A rest should have a note property of "rest".
+ */
 export type note = {
   octave: number,
   note: string,

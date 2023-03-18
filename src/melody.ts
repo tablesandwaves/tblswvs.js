@@ -1,23 +1,8 @@
-import { Sequence } from "./sequence";
 import { TblswvsError } from "./tblswvs_error";
 import * as helpers from "./helpers";
+import { note, noteData } from "./note_data";
 import { Rhythm } from "./rhythm";
-
-
-/**
- * The primary melody types: MIDI and Scale Degrees.
- *
- * MIDI mode means that integers in a Melody's steps property should be interpreted as MIDI note numbers.
- *
- * Scale Degrees mode means that numbers in a Melody should interpreted as scale degrees where the number 1
- * is represented as the scale's tonic. For example, with a 7 note scale like the western modal scales, 8 is
- * then interpreted as the tonic raised by 1 octave. Scale degrees should be greater than or equal to 1 and
- * the number 0 is interpreted as a rest.
- */
-export enum MelodyType {
-    MIDI    = "MIDI",
-    Degrees = "Scale Degrees"
-}
+import { Key } from "./key";
 
 
 /**
@@ -25,17 +10,22 @@ export enum MelodyType {
  * a sequence of notes and rests. It stores its rest symbol and its melodic mode, which should come from the
  * MelodyType enum.
  */
-export class Melody implements Sequence {
-    steps: (string|number)[];
-    restSymbol: string | number;
-    melodicMode: MelodyType;
+export class Melody {
+    notes: note[];
+    key?: Key;
 
 
-    constructor(steps?: (string|number)[], restSymbol?: number | string, mode?: MelodyType) {
-
-        this.steps = steps === undefined ? new Array<(string|number)>() : steps;
-        this.restSymbol = restSymbol === undefined ? 0 : restSymbol;
-        this.melodicMode = mode == undefined ? MelodyType.Degrees : mode;
+    constructor(notes: note[], key?: Key) {
+        this.notes = notes;
+        if (key != undefined) {
+            this.key = key;
+            notes.forEach(note => {
+                if (note.note != "rest") {
+                    const scaleNoteIndex = key.scaleNotes.indexOf(key.midi2note(note.midi).replace(/\d+/, ""));
+                    if (scaleNoteIndex != -1) note.scaleDegree = scaleNoteIndex + 1;
+                }
+            });
+        }
     }
 
 
@@ -45,7 +35,7 @@ export class Melody implements Sequence {
      * @returns a new copy of this object.
      */
     clone() {
-        return new Melody(this.steps, this.restSymbol, this.melodicMode);
+        return new Melody(this.notes, this.key);
     }
 
 
@@ -59,13 +49,8 @@ export class Melody implements Sequence {
      * @returns a new Melody that combines the sequences steps
      */
     static newFrom(sequences: Melody[]) {
-        const restSymbols = sequences.map(s => s.restSymbol).filter(helpers.unique);
-        const modes       = sequences.map(s => s.melodicMode).filter(helpers.unique);
-        if (restSymbols.length > 1 || modes.length > 1)
-            throw new TblswvsError(helpers.INCOMPATIBLE_SEQ_MSG);
-
-        const steps = sequences.map(s => s.steps).flat();
-        return new Melody(steps, sequences[0].restSymbol, sequences[0].melodicMode);
+        const steps = sequences.map(s => s.notes).flat();
+        return new Melody(steps, sequences[0].key);
     }
 
 
@@ -82,10 +67,9 @@ export class Melody implements Sequence {
         if (!helpers.areCoprime(length, ratio))
             throw new TblswvsError(helpers.SELF_SIMILARITY_REQUIRES_COPRIMES);
 
-
         let sequence = new Array(length).fill(-1);
-        sequence[0] = this.steps[0];
-        sequence[1] = this.steps[1];
+        sequence[0] = this.notes[0];
+        sequence[1] = this.notes[1];
 
         let contiguousSequence, currentNote, stepAmount, nextNote;
         let nextEmpty = sequence.findIndex(note => note == -1),
@@ -111,14 +95,14 @@ export class Melody implements Sequence {
 
             // If the sequence still has empty spots, find the first one and fill it with the next
             // note in the input note list.
-            nextNote = this.steps[count % this.steps.length];
+            nextNote = this.notes[count % this.notes.length];
             nextEmpty = sequence.findIndex(note => note == -1);
             if (nextEmpty != -1) sequence[nextEmpty] = nextNote;
             count++;
         } while (nextEmpty != -1);
 
         let melody = this.clone();
-        melody.steps = sequence;
+        melody.notes = sequence;
         return melody;
     }
 
@@ -137,18 +121,18 @@ export class Melody implements Sequence {
      * @returns a new Melody that conforms to the counting pattern
      */
     counted(): Melody {
-        let sequence = new Array<(string|number)>();
+        let sequence = new Array();
 
-        for (let i = 1; i <= this.steps.length; i++) {
+        for (let i = 1; i <= this.notes.length; i++) {
             let rhythmSteps = new Array(i).fill(1);
             rhythmSteps.push(0);
-            let length = this.steps.length * (i + 1);
+            let length = this.notes.length * (i + 1);
             let rhythm = new Rhythm(rhythmSteps, "wrap", length);
 
-            rhythm.applyTo(this).steps.forEach(step => sequence.push(step));
+            rhythm.applyTo(this).notes.forEach(step => sequence.push(step));
         }
         let countedMelody = this.clone();
-        countedMelody.steps = sequence;
+        countedMelody.notes = sequence;
 
         return countedMelody;
     }
@@ -171,15 +155,15 @@ export class Melody implements Sequence {
      * @returns a new Melody that conforms to the zig-zag pattern.
      */
     zigZag(): Melody {
-        let turnAroundStep = this.steps.length % 2 == 0 ? this.steps.length / 2 + 1 : Math.ceil(this.steps.length / 2);
-        let steps = this.steps.reduce((previous, current, i) => {
-            let segment = new Array(turnAroundStep).fill(-1).map((_, j) => this.steps[(j + i) % this.steps.length]);
+        let turnAroundStep = this.notes.length % 2 == 0 ? this.notes.length / 2 + 1 : Math.ceil(this.notes.length / 2);
+        let steps = this.notes.reduce((previous, current, i) => {
+            let segment = new Array(turnAroundStep).fill(-1).map((_, j) => this.notes[(j + i) % this.notes.length]);
             previous.push(segment);
             previous.push(segment.slice(1, turnAroundStep).reverse());
             return previous;
         }, new Array()).flat();
 
-        return new Melody(steps);
+        return new Melody(steps, this.key);
     }
 
 
@@ -191,17 +175,15 @@ export class Melody implements Sequence {
      * @param offset offset in the returned sequence from which the sequence starts
      * @returns a Melody with the infinity series as its steps
      */
-    static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number = 0) {
-        let   melody = new Melody(seed, -1, MelodyType.MIDI);
+    static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number = 0): number[] {
+        let   steps = new Array();
         const root   = seed[0];
         const step1  = seed[1];
         const seedInterval = step1 - root;
 
-        melody.steps = Array.from(new Array(size), (n, i) => i + offset).map(step => {
+        return Array.from(new Array(size), (n, i) => i + offset).map(step => {
             return root + (Melody.norgardInteger(step) * seedInterval);
         });
-
-        return melody;
     }
 
 

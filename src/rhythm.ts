@@ -1,5 +1,4 @@
 import { Melody } from "./melody";
-import { Sequence } from "./sequence";
 import { Transformation } from "./transformation";
 
 
@@ -11,7 +10,7 @@ import { Transformation } from "./transformation";
  * not need to have the same number of elements as in the Melody that it is transforming. The MelodicVector's
  * steps will instead be repeated until it is expanded to the size of the Melody's steps.
  */
-export class Rhythm implements Sequence, Transformation {
+export class Rhythm implements Transformation {
     steps: (1|0)[];
     length?: number;
     fillMode: ("wrap"|"silence");
@@ -39,7 +38,7 @@ export class Rhythm implements Sequence, Transformation {
      */
     applyTo(melody: Melody): Melody {
         const rhythmHits = this.steps.filter(step => step != 0).length;
-        const stepHits = Math.ceil(melody.steps.length / rhythmHits);
+        const stepHits = Math.ceil(melody.notes.length / rhythmHits);
         let transformedSequence = new Array(stepHits).fill(this.steps).flat();
 
         if (this.length !== undefined) {
@@ -63,13 +62,13 @@ export class Rhythm implements Sequence, Transformation {
         let processedStepIndex = 0;
         transformedSequence.forEach((step, i) => {
             if (step == 1) {
-                transformedSequence[i] = melody.steps[processedStepIndex % melody.steps.length];
+                transformedSequence[i] = melody.notes[processedStepIndex % melody.notes.length];
                 processedStepIndex++;
             } else {
-                transformedSequence[i] = melody.restSymbol;
+                transformedSequence[i] = {note: "rest", midi: -1, octave: -3};
             }
         });
 
-        return new Melody(transformedSequence, melody.restSymbol, melody.melodicMode);
+        return new Melody(transformedSequence, melody.key);
     }
 }

@@ -1,10 +1,6 @@
 import { TblswvsError } from "./tblswvs_error";
 
 
-export const INCOMPATIBLE_SEQ_MSG =
-    "A Sequence can only be made new from and Array of Sequence " +
-    "objects that share the same rest symbol and mode";
-
 export const NON_INTEGER_INPUTS = "Numbers must be integers";
 
 export const SELF_SIMILARITY_REQUIRES_COPRIMES =
@@ -13,6 +9,12 @@ export const SELF_SIMILARITY_REQUIRES_COPRIMES =
 
 export const SCALE_DEGREE_ERROR =
     "Scale degrees must be negative or positive, but not 0";
+
+export const SCALE_DEGREE_MELODIES_REQUIRE_KEY =
+    "Melodies constructed with MelodicType.Degrees must also supply a Key";
+
+export const SCALE_DEGREE_SHIFTS_REQUIRE_KEY =
+    "Melodic vectors with shift mode 'scale' can only operate on a Meloyd with a Key";
 
 
 export const unique = (value: any, index: number, self: any) => {

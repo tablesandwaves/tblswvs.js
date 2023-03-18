@@ -1,19 +1,18 @@
 import { expect } from "chai";
 
 import { MarkovChain } from "../src/markov_chain";
-import { Melody } from "../src/melody";
 
 
 describe("MarkovChain", () => {
     describe("when constructing a MarkovChain from a Melody", () => {
         let markovChain: MarkovChain;
         beforeEach(() => {
-            const melody = new Melody([1, 1, 4, 4, 5]);
+            const melody = [1, 1, 4, 4, 5];
             markovChain = new MarkovChain(melody);
         });
 
         it("has its input melody", () => {
-            expect(markovChain.input.steps).to.be.an("array").that.has.ordered.members([1, 1, 4, 4, 5]);
+            expect(markovChain.input).to.be.an("array").that.has.ordered.members([1, 1, 4, 4, 5]);
         });
 
         it("generates a state transition matrix", () => {

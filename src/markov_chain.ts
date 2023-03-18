@@ -1,12 +1,9 @@
-import { Melody } from "./melody";
-
-
 export class MarkovChain {
-    input: Melody;
+    input: any[];
     stateTransitionMatrix: Map<(string), (string|number)[]>;
 
 
-    constructor(input: Melody) {
+    constructor(input: any[]) {
         this.input = input;
         this.stateTransitionMatrix = this.generateStm();
     }
@@ -19,7 +16,7 @@ export class MarkovChain {
 
 
     private generateStm(): Map<(string), (string|number)[]> {
-        return this.input.steps.reduce((stm, step, i, arr) => {
+        return this.input.reduce((stm, step, i, arr) => {
             if (i < arr.length - 1) {
                 const prevStep = (i == 0) ? step : arr[i - 1];
                 const nextStep = arr[i + 1];
