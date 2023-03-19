@@ -48,4 +48,12 @@ export class Mutation {
             );
         }
     }
+
+
+    static invertReverse(inputMelody: Melody): Melody {
+        return new Melody(
+            Mutation.invert(inputMelody).notes.slice().reverse(),
+            inputMelody.key
+        )
+    }
 }
