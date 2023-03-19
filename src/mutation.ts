@@ -13,4 +13,9 @@ export class Mutation {
     static reverse(inputMelody: Melody): Melody {
         return new Melody(inputMelody.notes.slice().reverse(), inputMelody.key);
     }
+
+
+    static rotateLeftThree(inputMelody: Melody): Melody {
+        return new Melody(helpers.rotate(inputMelody.notes.slice(), -3), inputMelody.key);
+    }
 }
