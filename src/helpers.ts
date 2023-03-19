@@ -10,11 +10,11 @@ export const SELF_SIMILARITY_REQUIRES_COPRIMES =
 export const SCALE_DEGREE_ERROR =
     "Scale degrees must be negative or positive, but not 0";
 
-export const SCALE_DEGREE_MELODIES_REQUIRE_KEY =
-    "Melodies constructed with MelodicType.Degrees must also supply a Key";
-
 export const SCALE_DEGREE_SHIFTS_REQUIRE_KEY =
     "Melodic vectors with shift mode 'scale' can only operate on a Meloyd with a Key";
+
+export const KEY_REQUIRED_FOR_MUTATION =
+    "Mutations require a Melody object with a key";
 
 
 export const unique = (value: any, index: number, self: any) => {

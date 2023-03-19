@@ -45,5 +45,12 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([68, 67, 65, 60]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
         });
+
+        it("can invert a melody", () => {
+            const mutatedMelody = Mutation.invert(melody);
+            expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([8, 4, 3, 5]);
+            expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([72, 65, 63, 67]);
+            expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+        });
     });
 });
