@@ -35,16 +35,15 @@ export class Mutation {
         if (inputMelody.key == undefined) {
             throw new TblswvsError(helpers.KEY_REQUIRED_FOR_MUTATION);
         } else {
+            const key = inputMelody.key;
             return new Melody(
                 inputMelody.notes.map((note: note) => {
                     // This should not be necessary because of the check for the input melody's key.
                     // All melodies with a key have notes with scale degrees assigned.
                     let scaleDegree = note.scaleDegree ? note.scaleDegree : 1;
-                    return (inputMelody.key != undefined)
-                            ? { ...inputMelody.key.degreeInversion(scaleDegree) }
-                            : { octave: 0, note: "", midi: 0}
+                    return { ...key.degreeInversion(scaleDegree) };
                 }),
-                inputMelody.key
+                key
             );
         }
     }
@@ -55,5 +54,45 @@ export class Mutation {
             Mutation.invert(inputMelody).notes.slice().reverse(),
             inputMelody.key
         )
+    }
+
+
+    static bitFlipMutation(inputMelody: Melody): Melody {
+        if (inputMelody.key == undefined) {
+            throw new TblswvsError(helpers.KEY_REQUIRED_FOR_MUTATION);
+        } else {
+            const key = inputMelody.key;
+
+            const melodyAsScaleDegrees = inputMelody.notes.map(n => n.scaleDegree ? n.scaleDegree : 1);
+
+            let popMutations = new Array(melodyAsScaleDegrees.length).fill(0);
+            let mutations    = new Array(Math.ceil(melodyAsScaleDegrees.length * 0.3)).fill(1);
+            popMutations.splice(0, mutations.length, ...mutations);
+            helpers.shuffle(popMutations);
+
+            const largestInterval = melodyAsScaleDegrees.map(scaleDegree => Math.abs(scaleDegree)).slice().sort().reverse()[0];
+            const binaryPadding   = Number(largestInterval).toString(2).length;
+
+            return new Melody(inputMelody.notes.map((note, i) => {
+                if (popMutations[i] == 1) {
+                    // Convert the scale degree to binary, padding it to the number of digits that would fit the largest interval
+                    let binaryDigits = Number(note.scaleDegree).toString(2).padStart(binaryPadding, "0").split("").map(s => parseInt(s));
+
+                    // Choose a random bit and flip it (0 => 1, 1 => 0)
+                    let flipBit = Math.floor(Math.random() * binaryPadding);
+                    binaryDigits[flipBit] = 1 - binaryDigits[flipBit];
+
+                    // Return the new number based on the mutated gene. Note that a tblswvs scale degree may not equal 0.
+                    let newScaleDegree  = parseInt(binaryDigits.join(""), 2);
+                    newScaleDegree      = newScaleDegree == 0 ? -1 : newScaleDegree;
+                    let mutatedNoteData = { ...key.degree(newScaleDegree) };
+
+                    mutatedNoteData.midi += ((note.octave - key.octave) * 12);
+                    return mutatedNoteData;
+                } else {
+                    return note;
+                }
+            }), key);
+        }
     }
 }

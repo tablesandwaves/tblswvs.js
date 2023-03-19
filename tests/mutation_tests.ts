@@ -59,5 +59,20 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([67, 63, 65, 72]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
         });
+
+        it("can perform bit flipping mutations with 30% mutation", () => {
+            const inputDegrees  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            const melody        = new Melody(helpers.notesForScaleDegrees(inputDegrees, key), key);
+            const mutatedMelody = Mutation.bitFlipMutation(melody);
+            const outputDegrees = mutatedMelody.notes.map(n => n.scaleDegree);
+
+            let matchingNotes = 0;
+            for (let i = 0; i < inputDegrees.length; i++)
+                if (inputDegrees[i] == outputDegrees[i])
+                    matchingNotes++;
+
+            expect(matchingNotes).to.eq(7);
+            expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
     });
 });
