@@ -8,4 +8,9 @@ export class Mutation {
     static transposeDown2(inputMelody: Melody): Melody {
         return new MelodicVector([-2], "scale").applyTo(inputMelody);
     }
+
+
+    static reverse(inputMelody: Melody): Melody {
+        return new Melody(inputMelody.notes.slice().reverse(), inputMelody.key);
+    }
 }
