@@ -61,8 +61,9 @@ export class MelodicVector implements Transformation {
                         transformedMelody.notes[i].scaleDegree = scaleNoteIndex + 1;
 
                 } else {
-                    const currentDeg = transformedMelody.notes[i].scaleDegree;
-                    const newNote = transformedMelody.key?.degree(currentDeg + step);
+                    let transposedDegree = transformedMelody.notes[i].scaleDegree + step;
+                    transposedDegree     = transposedDegree < 1 ? transposedDegree - 1 : transposedDegree;
+                    const newNote = transformedMelody.key?.degree(transposedDegree);
                     if (newNote != undefined) transformedMelody.notes[i] = newNote;
                 }
             });

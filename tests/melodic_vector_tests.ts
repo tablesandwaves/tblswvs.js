@@ -8,7 +8,7 @@ import * as helpers from "./test_helpers";
 
 
 describe("MelodicVector", () => {
-    describe("is a Sequence", () => {
+    it("is has properties", () => {
         const vector = new MelodicVector([1, 0]);
         it("should have steps that can be returned as values", () => expect(vector.steps).to.have.ordered.members([1, 0]));
         it("should have numeric steps", () => vector.steps.forEach(step => expect(step).to.be.a("number")));
@@ -70,5 +70,18 @@ describe("MelodicVector", () => {
             const transformedMelody = vector.applyTo(melody).notes.map(n => n.midi);
             expect(transformedMelody).to.have.ordered.members([62, -1, -1, -1]);
         });
+    });
+
+
+    describe("transformations for negative scale degrees", () => {
+        const key = new Key(60, Scale.Minor);
+
+        it("transposes correctly", () => {
+            const [transformedMelodyScaleDegs, transformedMelodyMidiNotes] = helpers.vectorShiftNotesDegrees(
+                key, [1, 5, 6, 4], [-1, 0], "scale"
+            );
+            expect(transformedMelodyScaleDegs).to.have.ordered.members([-1, 5, 5, 4]);
+            expect(transformedMelodyMidiNotes).to.have.ordered.members([58, 67, 67, 65]);
+        })
     });
 });
