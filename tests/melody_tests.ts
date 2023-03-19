@@ -36,7 +36,7 @@ describe("Melody", () => {
 
         it("is not the same object", () => expect(copy).to.not.equal(source));
         it("looks like like the same melody", () => expect(copy).to.deep.equal(source));
-        it("has the same steps", () => expect(copy.notes).to.equal(source.notes));
+        it("has the same steps", () => expect(copy.notes).to.deep.equal(source.notes));
     });
 
 

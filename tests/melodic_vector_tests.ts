@@ -70,6 +70,15 @@ describe("MelodicVector", () => {
             const transformedMelody = vector.applyTo(melody).notes.map(n => n.midi);
             expect(transformedMelody).to.have.ordered.members([62, -1, -1, -1]);
         });
+
+        it("will leave the source melody unchanged", () => {
+            const melody = new Melody(helpers.notesForScaleDegrees([1, 5, 6, 4], key), key);
+            const vector = new MelodicVector([1, 0], "scale");
+            const modified = vector.applyTo(melody);
+            expect(modified.notes.map(n => n.scaleDegree)).to.have.ordered.members([2, 5, 7, 4]);
+            expect(modified.notes.map(n => n.midi)).to.have.ordered.members([62, 67, 70, 65]);
+            expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+        });
     });
 
 

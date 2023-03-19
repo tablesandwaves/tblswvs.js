@@ -35,7 +35,7 @@ export class Melody {
      * @returns a new copy of this object.
      */
     clone() {
-        return new Melody(this.notes, this.key);
+        return new Melody(this.notes.slice(), this.key);
     }
 
 
