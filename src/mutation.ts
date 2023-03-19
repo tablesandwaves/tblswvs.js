@@ -18,4 +18,14 @@ export class Mutation {
     static rotateLeftThree(inputMelody: Melody): Melody {
         return new Melody(helpers.rotate(inputMelody.notes.slice(), -3), inputMelody.key);
     }
+
+
+    static sort(inputMelody: Melody): Melody {
+        return new Melody(inputMelody.notes.slice().sort((a, b) => a.midi - b.midi));
+    }
+
+
+    static reverseSort(inputMelody: Melody): Melody {
+        return new Melody(inputMelody.notes.slice().sort((a, b) => b.midi - a.midi));
+    }
 }

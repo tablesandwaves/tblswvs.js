@@ -31,5 +31,19 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([65, 60, 67, 68]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
         });
+
+        it("can sort a melody", () => {
+            const mutatedMelody = Mutation.sort(melody);
+            expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 4, 5, 6]);
+            expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([60, 65, 67, 68]);
+            expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+        });
+
+        it("can reverse sort a melody", () => {
+            const mutatedMelody = Mutation.reverseSort(melody);
+            expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([6, 5, 4, 1]);
+            expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([68, 67, 65, 60]);
+            expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+        });
     });
 });
