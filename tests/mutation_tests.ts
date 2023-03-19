@@ -63,7 +63,7 @@ describe("Mutation", () => {
         it("can perform bit flipping mutations with 30% mutation", () => {
             const inputDegrees  = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             const melody        = new Melody(helpers.notesForScaleDegrees(inputDegrees, key), key);
-            const mutatedMelody = Mutation.bitFlipMutation(melody);
+            const mutatedMelody = Mutation.bitFlip(melody);
             const outputDegrees = mutatedMelody.notes.map(n => n.scaleDegree);
 
             let matchingNotes = 0;

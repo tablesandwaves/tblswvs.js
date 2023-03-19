@@ -57,7 +57,7 @@ export class Mutation {
     }
 
 
-    static bitFlipMutation(inputMelody: Melody): Melody {
+    static bitFlip(inputMelody: Melody): Melody {
         if (inputMelody.key == undefined) {
             throw new TblswvsError(helpers.KEY_REQUIRED_FOR_MUTATION);
         } else {
