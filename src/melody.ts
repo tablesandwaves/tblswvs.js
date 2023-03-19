@@ -20,7 +20,7 @@ export class Melody {
         if (key != undefined) {
             this.key = key;
             notes.forEach(note => {
-                if (note.note != "rest") {
+                if (note.note != "rest" && note.scaleDegree == undefined) {
                     const scaleNoteIndex = key.scaleNotes.indexOf(key.midi2note(note.midi).replace(/\d+/, ""));
                     if (scaleNoteIndex != -1) note.scaleDegree = scaleNoteIndex + 1;
                 }

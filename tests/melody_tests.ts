@@ -26,7 +26,14 @@ describe("Melody", () => {
             const melody = new Melody(notes, key);
             const expected = [1, 5, undefined, 4];
             expect(melody.notes.map(n => n.scaleDegree)).to.be.an("array").that.has.ordered.members(expected);
-        })
+        });
+
+        it("does not override scale degrees for notes when a Key is supplied", () => {
+            const notes = [{ octave: 4, note: 'C', midi: 72, scaleDegree: 8 }];
+            const melody = new Melody(notes, key);
+            const expected = [8];
+            expect(melody.notes.map(n => n.scaleDegree)).to.be.an("array").that.has.ordered.members(expected);
+        });
     });
 
 
