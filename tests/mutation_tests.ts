@@ -75,4 +75,27 @@ describe("Mutation", () => {
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         });
     });
+
+
+    describe("when randomly selecting mutations", () => {
+        it("can choose a mutation from the list of available methods", () => {
+            const mutatedMelody = Mutation.random(melody);
+            expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.be.an("array").that.does.not.eq([1, 5, 6, 4]);
+        });
+
+        it("can select a mutation from the list of method names passed", () => {
+            const mutatedMelody = Mutation.random(melody, ["transposeDown2", "reverse", "rotateLeftThree"]);
+            const expectedMutations = [
+                [-2, 3, 4, 2],
+                [4, 6, 5, 1],
+                [4, 1, 5, 6]
+            ]
+            expect(expectedMutations).to.deep.include(mutatedMelody.notes.map(n => n.scaleDegree));
+        });
+
+        it("will return the original melody if no function name is matched", () => {
+            const mutatedMelody = Mutation.random(melody, ["blerg", "blah"]);
+            expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+        });
+    });
 });

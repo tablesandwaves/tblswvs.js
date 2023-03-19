@@ -4,7 +4,31 @@ import { MelodicVector } from "./melodic_vector";
 import { Melody } from "./melody";
 import { note } from "./note_data";
 
+
 export class Mutation {
+    static functionMap: Map<string, Function> = new Map([
+        ["transposeDown2",  Mutation.transposeDown2],
+        ["reverse",         Mutation.reverse],
+        ["rotateLeftThree", Mutation.rotateLeftThree],
+        ["sort",            Mutation.sort],
+        ["reverseSort",     Mutation.reverseSort],
+        ["invert",          Mutation.invert],
+        ["invertReverse",   Mutation.invertReverse],
+        ["bitFlip",         Mutation.bitFlip]
+    ]);
+
+
+    static random(inputMelody: Melody, algorithms?: string[]): Melody {
+        if (algorithms == undefined)
+            algorithms = Object.getOwnPropertyNames(Mutation).filter(func => !["length", "name", "prototype"].includes(func));
+
+        const algorithm = this.functionMap.get(algorithms[Math.floor(Math.random() * algorithms.length)]);
+        if (algorithm != undefined)
+            return algorithm(inputMelody);
+        else
+            return inputMelody;
+    }
+
 
     static transposeDown2(inputMelody: Melody): Melody {
         return new MelodicVector([-2], "scale").applyTo(inputMelody);
