@@ -5,5 +5,6 @@ export * from "./melodic_vector";
 export * from "./rhythm";
 export * from "./lindenmayer_system";
 export * from "./markov_chain";
+export * from "./mutation";
 export * from "./helpers";
 export * from "./note_data";
