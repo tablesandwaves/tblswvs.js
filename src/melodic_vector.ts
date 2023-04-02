@@ -44,7 +44,7 @@ export class MelodicVector implements Transformation {
             const size = Math.ceil((melody.notes.length / this.steps.length));
             const expandedSteps = new Array(size).fill(this.steps).flat().slice(0, melody.notes.length);
 
-            // Create a copy of the melody so that the rest symbol and mode are carried forward.
+            // Create a copy of the melody so that the rest symbol is carried forward.
             // Then apply the vector addition.
             const transformedMelody = melody.clone();
             expandedSteps.forEach((step, i) => {

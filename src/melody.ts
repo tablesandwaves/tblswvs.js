@@ -1,14 +1,13 @@
 import { TblswvsError } from "./tblswvs_error";
 import * as helpers from "./helpers";
-import { note, noteData } from "./note_data";
+import { note } from "./note_data";
 import { Rhythm } from "./rhythm";
 import { Key } from "./key";
 
 
 /**
  * The Melody class represents the primary melodic object. A melody has steps that are intended to represet
- * a sequence of notes and rests. It stores its rest symbol and its melodic mode, which should come from the
- * MelodyType enum.
+ * a sequence of notes and rests.
  */
 export class Melody {
     notes: note[];

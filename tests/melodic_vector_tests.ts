@@ -8,7 +8,7 @@ import * as helpers from "./test_helpers";
 
 
 describe("MelodicVector", () => {
-    it("is has properties", () => {
+    it("has properties", () => {
         const vector = new MelodicVector([1, 0]);
         it("should have steps that can be returned as values", () => expect(vector.steps).to.have.ordered.members([1, 0]));
         it("should have numeric steps", () => vector.steps.forEach(step => expect(step).to.be.a("number")));
