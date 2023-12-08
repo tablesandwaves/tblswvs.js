@@ -83,6 +83,14 @@ describe("Melody", () => {
             it("requires the input and output melody lengths to be coprime", () => {
                 expect(() => { melody.selfReplicate(16) }).to.throw(TblswvsError, "A self-similar melody");
             });
+
+            it("does not return undefined note entries for an input note list of one", () => {
+                const notes = ["C"].map(note => {return {...noteData[chromaticScale.findIndex(scaleNote => scaleNote == note)]}});
+                const melody = new Melody(notes);
+                const selfReplicatingNotes = melody.selfReplicate(63).notes;
+                console.log(selfReplicatingNotes);
+                expect(selfReplicatingNotes).not.to.include(undefined);
+            });
         });
 
 

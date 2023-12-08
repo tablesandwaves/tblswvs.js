@@ -68,7 +68,7 @@ export class Melody {
 
         let sequence = new Array(length).fill(-1);
         sequence[0] = this.notes[0];
-        sequence[1] = this.notes[1];
+        sequence[1] = this.notes[1 % this.notes.length];
 
         let contiguousSequence, currentNote, stepAmount, nextNote;
         let nextEmpty = sequence.findIndex(note => note == -1),
