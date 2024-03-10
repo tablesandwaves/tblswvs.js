@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import * as helpers from "./test_helpers";
 import { ShiftRegister } from "../src/shift_register";
 
 
@@ -13,13 +12,18 @@ describe("ShiftRegister", () => {
             shiftRegister.bits = [1, 1, 1, 1,  0, 0, 0, 0];
             expect(shiftRegister.bits).to.have.ordered.members([1, 1, 1, 1,  0, 0, 0, 0]);
         });
+    });
 
-        describe("pushing new bits into it", () => {
-            it("adds the new bit to the beginning and rotates all bits to the right", () => {
-                shiftRegister.bits = [1, 0, 1, 0,  1, 0, 1, 0];
-                shiftRegister.push(1);
-                expect(shiftRegister.bits).to.have.ordered.members([1, 1, 0, 1,  0, 1, 0, 1]);
-            });
+
+    describe("pushing new bits into it", () => {
+        const shiftRegister = new ShiftRegister();
+        shiftRegister.bits = [1, 0, 1, 0,  1, 0, 1, 0];
+        shiftRegister.push(1);
+
+        it("adds the new bit to the beginning", () => expect(shiftRegister.bits[0]).to.eq(1));
+
+        it("rotates all bits to the right", () => {
+            expect(shiftRegister.bits).to.have.ordered.members([1, 1, 0, 1,  0, 1, 0, 1]);
         });
     });
 });
