@@ -1,4 +1,4 @@
-import { rotate } from "./helpers";
+import { rotate, scaleToRange } from "./helpers";
 
 
 export class ShiftRegister {
@@ -15,5 +15,15 @@ export class ShiftRegister {
     push(bit: (0|1)) {
         this.bits = rotate(this.bits, 1);
         this.bits[0] = bit;
+    }
+
+
+    toDecimal() {
+        return parseInt(this.bits.slice().reverse().join(""), 2);
+    }
+
+
+    normalized() {
+        return scaleToRange(this.toDecimal(), [0, 256], [0, 1]);
     }
 }

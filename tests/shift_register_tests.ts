@@ -26,4 +26,17 @@ describe("ShiftRegister", () => {
             expect(shiftRegister.bits).to.have.ordered.members([1, 1, 0, 1,  0, 1, 0, 1]);
         });
     });
+
+
+    describe("its current value", () => {
+        const shiftRegister = new ShiftRegister();
+        shiftRegister.bits = [0, 0, 0, 0,  0, 0, 0, 1];
+
+        it("can be represented as an integer using binary to decimal conversion", () => expect(shiftRegister.toDecimal()).to.eq(128));
+
+        it("can be represented as a normalized decimal between 0.0 and 1.0", () => {
+            const expected = Math.round((shiftRegister.normalized() + Number.EPSILON) * 1000) / 1000;
+            expect(expected).to.eq(0.5);
+        });
+    });
 });

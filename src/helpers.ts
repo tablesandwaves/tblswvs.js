@@ -70,3 +70,8 @@ export const shuffle = (arr: any[]) => {
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
 }
+
+
+export const scaleToRange = ( num: number, inputRange: number[], outputRange: number[] ) => {
+    return (num - inputRange[0]) * (outputRange[1] - outputRange[0]) / (inputRange[1] - inputRange[0]) + outputRange[0];
+}

@@ -56,4 +56,17 @@ describe("tblswvs.util", () => {
             expect(map.get(9)).to.equal(-1);;
         });
     });
+
+
+    describe("scaling numbers from one range to another", () => {
+        it("can scale the boundaries", () => {
+            expect(util.scaleToRange(0, [0, 255], [0, 1])).to.eq(0);
+            expect(util.scaleToRange(255, [0, 255], [0, 1])).to.eq(1);
+        });
+
+        it("can scale the middle", () => {
+            expect(util.scaleToRange(128, [0, 256], [0, 1])).to.eq(0.5);
+            expect(util.scaleToRange(64,  [0, 256], [0, 1])).to.eq(0.25);
+        });
+    });
 });
