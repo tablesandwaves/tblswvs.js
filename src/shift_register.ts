@@ -8,22 +8,22 @@ export class ShiftRegister {
 
     constructor(length: number = 8) {
         this.length = length;
-        this.bits = new Array(length).fill(0);
+        this.bits = new Array(8).fill(0);
     }
 
 
     push(bit: (0|1)) {
-        this.bits = rotate(this.bits, 1);
+        this.bits.splice(0, this.length, ...rotate(this.bits.slice(0, this.length), 1));
         this.bits[0] = bit;
     }
 
 
     toDecimal() {
-        return parseInt(this.bits.slice().reverse().join(""), 2);
+        return parseInt(this.bits.slice(0, this.length).reverse().join(""), 2);
     }
 
 
     normalized() {
-        return scaleToRange(this.toDecimal(), [0, 256], [0, 1]);
+        return scaleToRange(this.toDecimal(), [0, 2 ** this.length], [0, 1]);
     }
 }

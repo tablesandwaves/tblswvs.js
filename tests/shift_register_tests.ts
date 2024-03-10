@@ -39,4 +39,25 @@ describe("ShiftRegister", () => {
             expect(expected).to.eq(0.5);
         });
     });
+
+
+    describe("shortening the length of the bit array", () => {
+        const shiftRegister = new ShiftRegister(3);
+
+        it("only rotates the bits up to that length when pushing a new bit into it", () => {
+            shiftRegister.bits = [1, 0, 1, 0,  1, 0, 1, 0];
+            shiftRegister.push(1);
+            expect(shiftRegister.bits).to.have.ordered.members([1, 1, 0, 0,  1, 0, 1, 0]);
+        });
+
+        it("uses <length> digits in determing the decimal representation", () => {
+            shiftRegister.bits = [1, 0, 1, 0,  1, 0, 1, 0];
+            expect(shiftRegister.toDecimal()).to.eq(5);
+        });
+
+        it("uses <length> digits when calculating the normalized decimal representation", () => {
+            shiftRegister.bits = [1, 0, 1, 0,  1, 0, 1, 0];
+            expect(shiftRegister.normalized()).to.eq(0.625);
+        });
+    });
 });
