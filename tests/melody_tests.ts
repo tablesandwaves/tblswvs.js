@@ -88,7 +88,6 @@ describe("Melody", () => {
                 const notes = ["C"].map(note => {return {...noteData[chromaticScale.findIndex(scaleNote => scaleNote == note)]}});
                 const melody = new Melody(notes);
                 const selfReplicatingNotes = melody.selfReplicate(63).notes;
-                console.log(selfReplicatingNotes);
                 expect(selfReplicatingNotes).not.to.include(undefined);
             });
         });
