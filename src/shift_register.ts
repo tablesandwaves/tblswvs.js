@@ -6,15 +6,16 @@ const DEFAULT_BIT_ARRAY_SIZE = 8;
 
 export class ShiftRegister {
     #bits:    (0|1)[];
-    #decimal: number = 0;
+    #decimal: number;
     #length:  number;
     #chance:  number;
 
 
     constructor(length: number = DEFAULT_BIT_ARRAY_SIZE, chance: number = 1) {
-        this.#length = length < 1 ? 1 : (length > DEFAULT_BIT_ARRAY_SIZE ? DEFAULT_BIT_ARRAY_SIZE : Math.floor(length));
-        this.#chance = chance < 0 ? 0 : (chance > 1 ? 1 : chance);
-        this.#bits   = new Array(DEFAULT_BIT_ARRAY_SIZE).fill(0);
+        this.#length  = length < 1 ? 1 : (length > DEFAULT_BIT_ARRAY_SIZE ? DEFAULT_BIT_ARRAY_SIZE : Math.floor(length));
+        this.#chance  = chance < 0 ? 0 : (chance > 1 ? 1 : chance);
+        this.#bits    = new Array(DEFAULT_BIT_ARRAY_SIZE).fill(0);
+        this.#decimal = 0;
     }
 
 
@@ -53,6 +54,9 @@ export class ShiftRegister {
             this.#length = 8;
         else
             this.#length = Math.floor(length);
+
+        this.#bits    = new Array(DEFAULT_BIT_ARRAY_SIZE).fill(0);
+        this.#decimal = 0;
     }
 
 

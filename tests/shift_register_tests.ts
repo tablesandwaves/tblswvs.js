@@ -13,6 +13,21 @@ describe("ShiftRegister", () => {
     });
 
 
+    describe("changing the length", () => {
+        const shiftRegister = new ShiftRegister();
+
+        it("will reset the the shift register so step() calls do not overflow the normalized bounds", () => {
+            shiftRegister.bits = [1, 1, 1, 1,  0, 0, 0, 0];
+            expect(shiftRegister.bits).to.have.ordered.members([1, 1, 1, 1,  0, 0, 0, 0]);
+            expect(shiftRegister.decimal).to.eq(15);
+
+            shiftRegister.length = 4;
+            expect(shiftRegister.bits).to.have.ordered.members([0, 0, 0, 0,  0, 0, 0, 0]);
+            expect(shiftRegister.decimal).to.eq(0);
+        });
+    });
+
+
     describe("setting the state by bit array", () => {
         const shiftRegister = new ShiftRegister();
         shiftRegister.bits = [1, 1, 1, 1,  0, 0, 0, 0];
