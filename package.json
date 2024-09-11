@@ -1,6 +1,6 @@
 {
   "name": "tblswvs",
-  "version": "0.19.2",
+  "version": "0.19.3",
   "description": "Utility for opinionated processing of musical data",
   "repository": "git@github.com:tablesandwaves/tblswvs.js.git",
   "private": true,
