@@ -91,7 +91,7 @@ export class Key {
 
         let quality = (degree < 0) ?
                       ((type == "T") ? this.mode.chordQualities.slice().reverse()[(Math.abs(degree) - 1) % this.mode.chordQualities.length] : type) :
-                      ((type == "T") ? this.mode.chordQualities[degree - 1] : type);
+                      ((type == "T") ? this.mode.chordQualities[(degree - 1) % this.mode.chordQualities.length] : type);
 
         /*
          * octaveTransposition: the calling client may request transposition (-/+)
@@ -100,12 +100,15 @@ export class Key {
          * + 24: lowest MIDI octave, -2, means this.octave*12 could be as low as -24, which should be brought up to MIDI note 0
          */
         let midiTransposition = (octaveTransposition == undefined ? 0 : octaveTransposition * 12) + this.midiTonic + (this.octave * 12) + 24;
-        if (degree < 0) midiTransposition += (Math.ceil(degree / this.mode.scaleOffsets.length) * 12);
+        if (degree < 0)
+            midiTransposition += (Math.ceil((degree + 1) / this.mode.scaleOffsets.length) * 12);
+        else
+            midiTransposition += (Math.floor((degree - 1) / this.mode.scaleOffsets.length) * 12);
 
         let midi = noteData.chordTypes[quality].intervals.reduce((midiNotes: number[], intv: number) => {
             let scaleOffset = (degree < 0) ?
                               this.mode.scaleOffsets.slice().reverse()[(Math.abs(degree) - 1) % this.mode.scaleOffsets.length] :
-                              this.mode.scaleOffsets[degree - 1];
+                              this.mode.scaleOffsets[(degree - 1) % this.mode.scaleOffsets.length];
             midiNotes.push(intv + scaleOffset + midiTransposition);
             return midiNotes;
         }, []);
@@ -137,6 +140,8 @@ export class Key {
         let absDegree = (degree < 0) ?
                         [...new Array(this.mode.stepOffsets.length)].map((_, i) => i + 1).reverse()[(Math.abs(degree) - 1) % this.mode.stepOffsets.length] :
                         degree;
+
+        if (absDegree > this.mode.stepOffsets.length) absDegree = absDegree % this.mode.stepOffsets.length;
 
         if (quality.startsWith("M")) {
             return quality.replace("M", noteData.chordNumeralsMap[absDegree]);

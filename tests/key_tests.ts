@@ -203,6 +203,10 @@ describe("Key", () => {
                 expect(cMajor.chord(1, "T", 2)).to.deep.include({midi: [60, 64, 67], quality: "M", root: "C", degree: "I"});
             });
 
+            it("can shift the chord to a higher octave using a scale degree higher than the scale's degree count", () => {
+                expect(cMajor.chord(8, "T")).to.deep.include({midi: [48, 52, 55], quality: "M", root: "C", degree: "I"});
+            });
+
             it("can shift the chord to a lower octave", () => {
                 expect(cMajor.chord(1, "T", -1)).to.deep.include({midi: [24, 28, 31], quality: "M", root: "C", degree: "I"});
             });
