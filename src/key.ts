@@ -87,7 +87,11 @@ export class Key {
 
 
     chord(degree: number, type: string, octaveTransposition?: number): noteData.chord {
-        let quality = (type == "T") ? this.mode.chordQualities[degree - 1] : type;
+        if (degree == 0) throw new TblswvsError(helpers.SCALE_DEGREE_ERROR);
+
+        let quality = (degree < 0) ?
+                      ((type == "T") ? this.mode.chordQualities.slice().reverse()[(Math.abs(degree) - 1) % this.mode.chordQualities.length] : type) :
+                      ((type == "T") ? this.mode.chordQualities[degree - 1] : type);
 
         /*
          * octaveTransposition: the calling client may request transposition (-/+)
@@ -96,9 +100,13 @@ export class Key {
          * + 24: lowest MIDI octave, -2, means this.octave*12 could be as low as -24, which should be brought up to MIDI note 0
          */
         let midiTransposition = (octaveTransposition == undefined ? 0 : octaveTransposition * 12) + this.midiTonic + (this.octave * 12) + 24;
+        if (degree < 0) midiTransposition += (Math.ceil(degree / this.mode.scaleOffsets.length) * 12);
 
         let midi = noteData.chordTypes[quality].intervals.reduce((midiNotes: number[], intv: number) => {
-            midiNotes.push(intv + this.mode.scaleOffsets[degree - 1] + midiTransposition);
+            let scaleOffset = (degree < 0) ?
+                              this.mode.scaleOffsets.slice().reverse()[(Math.abs(degree) - 1) % this.mode.scaleOffsets.length] :
+                              this.mode.scaleOffsets[degree - 1];
+            midiNotes.push(intv + scaleOffset + midiTransposition);
             return midiNotes;
         }, []);
 
@@ -107,7 +115,6 @@ export class Key {
             quality: quality,
             root: this.#calculateChordRoot(midi, quality),
             degree: this.#calculateChordDegree(quality, degree),
-            keyTransposition: octaveTransposition == undefined ? 0 : octaveTransposition
         }
     }
 
@@ -127,22 +134,26 @@ export class Key {
 
 
     #calculateChordDegree(quality: string, degree: number): string {
+        let absDegree = (degree < 0) ?
+                        [...new Array(this.mode.stepOffsets.length)].map((_, i) => i + 1).reverse()[(Math.abs(degree) - 1) % this.mode.stepOffsets.length] :
+                        degree;
+
         if (quality.startsWith("M")) {
-            return quality.replace("M", noteData.chordNumeralsMap[degree]);
+            return quality.replace("M", noteData.chordNumeralsMap[absDegree]);
         } else if (quality.startsWith("m")) {
-            return quality.replace("m", noteData.chordNumeralsMap[degree].toLowerCase());
+            return quality.replace("m", noteData.chordNumeralsMap[absDegree].toLowerCase());
         } else if (quality.startsWith("aug")) {
-            return quality.replace("aug", noteData.chordNumeralsMap[degree]) + "+";
+            return quality.replace("aug", noteData.chordNumeralsMap[absDegree]) + "+";
         } else if (quality.startsWith("dim")) {
-            return quality.replace("dim", noteData.chordNumeralsMap[degree]).toLowerCase() + "o";
+            return quality.replace("dim", noteData.chordNumeralsMap[absDegree]).toLowerCase() + "o";
         } else if (quality.startsWith("sus2")) {
-            return noteData.chordNumeralsMap[degree] + quality;
+            return noteData.chordNumeralsMap[absDegree] + quality;
         } else if (quality.startsWith("sus4")) {
-            return quality.replace("sus2", noteData.chordNumeralsMap[degree]) + "sus4";
+            return quality.replace("sus2", noteData.chordNumeralsMap[absDegree]) + "sus4";
         } else if (quality.startsWith("WT")) {
-            return quality.replace("WT", noteData.chordNumeralsMap[degree]).toLowerCase() + "WT";
+            return quality.replace("WT", noteData.chordNumeralsMap[absDegree]).toLowerCase() + "WT";
         } else {
-            return degree + quality;
+            return absDegree + quality;
         }
     }
 

@@ -53,7 +53,6 @@ export type chord = {
   quality: string,
   root: string,
   degree: string,
-  keyTransposition: number
 }
 
 
