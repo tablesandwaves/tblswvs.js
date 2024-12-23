@@ -90,6 +90,17 @@ describe("Mutation", () => {
             expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
             expect(mutatedMelody.key?.tonic).to.eq("C");
         });
+
+        it("can perform bit flipping mutations on negative scale degrees", () => {
+            const inputDegrees  = [-1, -2, -3, -4];
+            const melody        = new Melody(helpers.notesForScaleDegrees(inputDegrees, key), key);
+            const mutatedMelody = Mutation.bitFlip(melody);
+            mutatedMelody.notes.forEach(melodyNote => {
+                expect(melodyNote.note).not.to.be.undefined;
+                expect(melodyNote.scaleDegree).not.to.be.NaN;
+                expect(melodyNote.midi).not.to.be.NaN;
+            });
+        });
     });
 
 

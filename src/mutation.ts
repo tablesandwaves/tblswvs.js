@@ -99,15 +99,17 @@ export class Mutation {
 
             return new Melody(inputMelody.notes.map((note, i) => {
                 if (popMutations[i] == 1) {
+                    const sign = note.scaleDegree !== undefined && note.scaleDegree < 0 ? -1 : 1;
+
                     // Convert the scale degree to binary, padding it to the number of digits that would fit the largest interval
-                    let binaryDigits = Number(note.scaleDegree).toString(2).padStart(binaryPadding, "0").split("").map(s => parseInt(s));
+                    let binaryDigits = Number(Math.abs(note.scaleDegree == undefined ? 1 : note.scaleDegree)).toString(2).padStart(binaryPadding, "0").split("").map(s => parseInt(s));
 
                     // Choose a random bit and flip it (0 => 1, 1 => 0)
                     let flipBit = Math.floor(Math.random() * binaryPadding);
                     binaryDigits[flipBit] = 1 - binaryDigits[flipBit];
 
                     // Return the new number based on the mutated gene. Note that a tblswvs scale degree may not equal 0.
-                    let newScaleDegree  = parseInt(binaryDigits.join(""), 2);
+                    let newScaleDegree  = parseInt(binaryDigits.join(""), 2) * sign;
                     newScaleDegree      = newScaleDegree == 0 ? -1 : newScaleDegree;
                     let mutatedNoteData = { ...key.degree(newScaleDegree) };
 
