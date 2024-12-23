@@ -46,12 +46,12 @@ export class Mutation {
 
 
     static sort(inputMelody: Melody): Melody {
-        return new Melody(inputMelody.notes.slice().sort((a, b) => a.midi - b.midi));
+        return new Melody(inputMelody.notes.slice().sort((a, b) => a.midi - b.midi), inputMelody.key);
     }
 
 
     static reverseSort(inputMelody: Melody): Melody {
-        return new Melody(inputMelody.notes.slice().sort((a, b) => b.midi - a.midi));
+        return new Melody(inputMelody.notes.slice().sort((a, b) => b.midi - a.midi), inputMelody.key);
     }
 
 

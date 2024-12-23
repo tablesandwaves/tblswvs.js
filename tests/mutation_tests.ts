@@ -16,6 +16,8 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([-2, 3, 4, 2]);
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([56, 63, 65, 62]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
 
         it("can reverse a melody", () => {
@@ -23,6 +25,8 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([4, 6, 5, 1]);
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([65, 68, 67, 60]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
 
         it("can rotate a melody left by 3", () => {
@@ -30,6 +34,8 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([4, 1, 5, 6]);
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([65, 60, 67, 68]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
 
         it("can sort a melody", () => {
@@ -37,6 +43,8 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 4, 5, 6]);
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([60, 65, 67, 68]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
 
         it("can reverse sort a melody", () => {
@@ -44,6 +52,8 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([6, 5, 4, 1]);
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([68, 67, 65, 60]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
 
         it("can invert a melody", () => {
@@ -51,6 +61,8 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([8, 4, 3, 5]);
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([72, 65, 63, 67]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
 
         it("can invert and reverse a melody", () => {
@@ -58,6 +70,8 @@ describe("Mutation", () => {
             expect(mutatedMelody.notes.map(n => n.scaleDegree)).to.have.ordered.members([5, 3, 4, 8]);
             expect(mutatedMelody.notes.map(n => n.midi)).to.have.ordered.members([67, 63, 65, 72]);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 5, 6, 4]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
 
         it("can perform bit flipping mutations with 30% mutation", () => {
@@ -73,6 +87,8 @@ describe("Mutation", () => {
 
             expect(matchingNotes).to.eq(7);
             expect(melody.notes.map(n => n.scaleDegree)).to.have.ordered.members([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(mutatedMelody.key?.scale).to.eq(Scale.Minor);
+            expect(mutatedMelody.key?.tonic).to.eq("C");
         });
     });
 
