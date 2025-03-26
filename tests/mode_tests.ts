@@ -96,6 +96,12 @@ describe("Mode", () => {
             expect(wholeTone.chordQualities).to.have.ordered.members(["aug", "aug", "aug", "aug", "aug", "aug"]);
         });
 
+        it("Diminished", () => {
+            const diminished = new Mode(Scale.Diminished);
+            expect(diminished.scaleOffsets).to.have.ordered.members([0, 2, 3, 5, 6, 8, 9, 11]);
+            expect(diminished.chordQualities).to.have.ordered.members(["dim", "dim", "dim", "dim", "dim", "dim", "dim", "dim"]);
+        });
+
         it("Chromatic", () => {
             const chromatic = new Mode(Scale.Chromatic);
             const expectedScaleOffsets = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];

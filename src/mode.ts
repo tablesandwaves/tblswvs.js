@@ -14,6 +14,7 @@ export enum Scale {
     MajPentatonic,
     MinPentatonic,
     WholeTone,
+    Diminished,
     Chromatic,
     GS
 }
@@ -30,6 +31,7 @@ export class Mode {
 
     private static readonly MAJOR_STEP_OFFSETS   = [2, 2, 1, 2, 2, 2, 1];
     private static readonly WHOLE_TONE_OFFSETS   = [2, 2, 2, 2, 2, 2];
+    private static readonly DIMINISHED_OFFSETS   = [2, 1, 2, 1, 2, 1, 2, 1];
     private static readonly CHROMATIC_OFFSETS    = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
     private static readonly GS_OFFSETS           = [1, 2, 1, 1, 3, 1, 3];
     private static readonly CHORD_INTERVAL_MAP: Record<string, string> = {
@@ -74,6 +76,9 @@ export class Mode {
         } else if (scale == Scale.WholeTone) {
             stepOffsets = Mode.WHOLE_TONE_OFFSETS;
             scaleDegreeMapping = [1, 2, 3, 4, 5, 6];
+        } else if (scale == Scale.Diminished) {
+            stepOffsets = Mode.DIMINISHED_OFFSETS;
+            scaleDegreeMapping = [1, 2, 3, 4, 5, 6, 7, 8];
         } else if (scale == Scale.Chromatic) {
             stepOffsets = Mode.CHROMATIC_OFFSETS;
             scaleDegreeMapping = [1, 1.5, 2, 2.5, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7];
