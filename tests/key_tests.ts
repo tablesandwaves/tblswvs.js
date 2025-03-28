@@ -162,10 +162,11 @@ describe("Key", () => {
 
 
         describe("in custom, non-heptatonic scales", () => {
-            const cMajPent   = new Key("C", Scale.MajPentatonic);
-            const cWT        = new Key("C", Scale.WholeTone);
-            const cChromatic = new Key("C", Scale.Chromatic);
-            const cGS        = new Key("C", Scale.GS);
+            const cMajPent    = new Key("C", Scale.MajPentatonic);
+            const cWT         = new Key("C", Scale.WholeTone);
+            const cChromatic  = new Key("C", Scale.Chromatic);
+            const cGS         = new Key("C", Scale.GS);
+            const cDiminished = new Key("C", Scale.Diminished);
 
             it("finds a minor slash chord", () => {
                 expect(cMajPent.chord(1, "T")).to.deep.include({midi: [36, 40, 45], quality: "m/3", root: "A", degree: "i/3"});
@@ -195,6 +196,10 @@ describe("Key", () => {
                 expect(cGS.chord(1, "T")).to.deep.include({midi: [36, 39, 41], quality: "m5bb", root: "C", degree: "i5bb"});
                 expect(cGS.chord(3, "T")).to.deep.include({midi: [39, 41, 45], quality: "sus25b", root: "Eb", degree: "IIIsus25b"});
             });
+
+            it("finds a chord below the octave", () => {
+                expect(cDiminished.chord(-1, "T")).to.deep.include({midi: [35, 38, 41], quality: "dim", root: "B", degree: "viiio"});
+            });
         });
 
 
@@ -215,11 +220,11 @@ describe("Key", () => {
 
         describe("generating chords for negative scale degrees", () => {
             it("can use a negative scale degree index", () => {
-                expect(cMinor.chord(-4, "T")).to.deep.include({midi: [41, 44, 48], quality: "m", root: "F", degree: "iv"});
+                expect(cMinor.chord(-4, "T")).to.deep.include({midi: [29, 32, 36], quality: "m", root: "F", degree: "iv"});
             });
 
             it("can use a negative scale degree index beyond the first negative octave", () => {
-                expect(cMinor.chord(-11, "T")).to.deep.include({midi: [29, 32, 36], quality: "m", root: "F", degree: "iv"});
+                expect(cMinor.chord(-11, "T")).to.deep.include({midi: [17, 20, 24], quality: "m", root: "F", degree: "iv"});
             });
         });
     });
@@ -285,6 +290,10 @@ describe("Key", () => {
             expect(new Key("C", Scale.WholeTone).scaleNotes).to.have.ordered.members(["C", "D", "E", "F#", "G#", "A#"]);
         });
 
+        it("for Diminished", () => {
+            expect(new Key("C", Scale.Diminished).scaleNotes).to.have.ordered.members(["C", "D", "Eb", "F", "Gb", "G#", "A", "B"]);
+        });
+
         it("for Chromatic", () => {
             const expected = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
             expect(new Key("C", Scale.Chromatic).scaleNotes).to.have.ordered.members(expected);
@@ -295,5 +304,4 @@ describe("Key", () => {
             expect(new Key("C", Scale.GS).scaleNotes).to.have.ordered.members(expected);
         });
     });
-
 })

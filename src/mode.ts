@@ -78,7 +78,7 @@ export class Mode {
             scaleDegreeMapping = [1, 2, 3, 4, 5, 6];
         } else if (scale == Scale.Diminished) {
             stepOffsets = Mode.DIMINISHED_OFFSETS;
-            scaleDegreeMapping = [1, 2, 3, 4, 5, 6, 7, 8];
+            scaleDegreeMapping = [1, 2, 3, 4, 5, 5.5, 6, 7];
         } else if (scale == Scale.Chromatic) {
             stepOffsets = Mode.CHROMATIC_OFFSETS;
             scaleDegreeMapping = [1, 1.5, 2, 2.5, 3, 4, 4.5, 5, 5.5, 6, 6.5, 7];

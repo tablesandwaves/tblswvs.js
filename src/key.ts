@@ -101,7 +101,7 @@ export class Key {
          */
         let midiTransposition = (octaveTransposition == undefined ? 0 : octaveTransposition * 12) + this.midiTonic + (this.octave * 12) + 24;
         if (degree < 0)
-            midiTransposition += (Math.ceil((degree + 1) / this.mode.scaleOffsets.length) * 12);
+            midiTransposition += (Math.floor(degree / this.mode.scaleOffsets.length) * 12);
         else
             midiTransposition += (Math.floor((degree - 1) / this.mode.scaleOffsets.length) * 12);
 
@@ -125,7 +125,7 @@ export class Key {
     #calculateChordRoot(chordMidi: number[], chordQuality: string): string {
         let inversion = chordQuality.split("/")[1];
         if (inversion == undefined) {
-            return this.midi2note(chordMidi[0]).replace(/[0-9]/g, "");
+            return this.midi2note(chordMidi[0]).replace(/[0-9\-]/g, "");
         } else if (inversion == "2" || inversion == "3" || inversion == "4") {
             return this.midi2note(chordMidi[2]).replace(/[0-9]/g, "");
         } else if (inversion == "5") {
