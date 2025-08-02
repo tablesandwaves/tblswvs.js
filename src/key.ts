@@ -124,7 +124,7 @@ export class Key {
 
     #calculateChordRoot(chordMidi: number[], chordQuality: string): string {
         let inversion = chordQuality.split("/")[1];
-        if (inversion == undefined) {
+        if (inversion === undefined) {
             return this.midi2note(chordMidi[0]).replace(/[0-9\-]/g, "");
         } else if (inversion == "2" || inversion == "3" || inversion == "4") {
             return this.midi2note(chordMidi[2]).replace(/[0-9]/g, "");
@@ -164,7 +164,7 @@ export class Key {
 
 
     midi2note(midiNoteNumber: number): string {
-        const normalizedNumber = midiNoteNumber % 12;
+        const normalizedNumber = midiNoteNumber % 12 - this.midiTonic;
         const normalizedIndex  = this.mode.scaleOffsets.indexOf(normalizedNumber);
         if (normalizedIndex != -1) {
             return this.scaleNotes[normalizedIndex] + noteData.noteData[midiNoteNumber].octave;

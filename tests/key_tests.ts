@@ -120,8 +120,10 @@ describe("Key", () => {
 
 
     describe("when generating chords", () => {
-        let cMajor = new Key("C", Scale.Major);
-        let cMinor = new Key("C", Scale.Minor);
+        let cMajor      = new Key("C", Scale.Major);
+        let cMinor      = new Key("C", Scale.Minor);
+        let gDorian     = new Key(55, Scale.Dorian);
+        let cSharpMinor = new Key(61, Scale.Minor);
 
         describe("requesting a chord for degree 0", () => {
             it("returns an error for scale degree 0", () => {
@@ -158,6 +160,23 @@ describe("Key", () => {
             it("roots that are flat", () => {
                 expect(cMinor.chord(3, "T")).to.deep.include({midi: [39, 43, 46], quality: "M", root: "Eb", degree: "III"});
             });
+
+            it("maps the chord roots correctly for non-C", () => {
+                expect(gDorian.chord(1, "T")).to.deep.include({midi: [55, 58, 62], quality: "m", root: "G", degree: "i"});
+                expect(gDorian.chord(2, "T")).to.deep.include({midi: [57, 60, 64], quality: "m", root: "A", degree: "ii"});
+                expect(gDorian.chord(3, "T")).to.deep.include({midi: [58, 62, 65], quality: "M", root: "Bb", degree: "III"});
+                expect(gDorian.chord(4, "T")).to.deep.include({midi: [60, 64, 67], quality: "M", root: "C", degree: "IV"});
+                expect(gDorian.chord(5, "T")).to.deep.include({midi: [62, 65, 69], quality: "m", root: "D", degree: "v"});
+                expect(gDorian.chord(6, "T")).to.deep.include({midi: [64, 67, 70], quality: "dim", root: "E", degree: "vio"});
+                expect(gDorian.chord(7, "T")).to.deep.include({midi: [65, 69, 72], quality: "M", root: "F", degree: "VII"});
+                expect(cSharpMinor.chord(1, "T")).to.deep.include({midi: [61, 64, 68], quality: "m", root: "C#", degree: "i"});
+                expect(cSharpMinor.chord(2, "T")).to.deep.include({midi: [63, 66, 69], quality: "dim", root: "D#", degree: "iio"});
+                expect(cSharpMinor.chord(3, "T")).to.deep.include({midi: [64, 68, 71], quality: "M", root: "E", degree: "III"});
+                expect(cSharpMinor.chord(4, "T")).to.deep.include({midi: [66, 69, 73], quality: "m", root: "F#", degree: "iv"});
+                expect(cSharpMinor.chord(5, "T")).to.deep.include({midi: [68, 71, 75], quality: "m", root: "G#", degree: "v"});
+                expect(cSharpMinor.chord(6, "T")).to.deep.include({midi: [69, 73, 76], quality: "M", root: "A", degree: "VI"});
+                expect(cSharpMinor.chord(7, "T")).to.deep.include({midi: [71, 75, 78], quality: "M", root: "B", degree: "VII"});
+            })
         });
 
 
