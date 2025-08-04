@@ -124,6 +124,7 @@ describe("Key", () => {
         let cMinor      = new Key("C", Scale.Minor);
         let gDorian     = new Key(55, Scale.Dorian);
         let cSharpMinor = new Key(61, Scale.Minor);
+        let dMinPent    = new Key(50, Scale.MinPentatonic);
 
         describe("requesting a chord for degree 0", () => {
             it("returns an error for scale degree 0", () => {
@@ -176,7 +177,13 @@ describe("Key", () => {
                 expect(cSharpMinor.chord(5, "T")).to.deep.include({midi: [68, 71, 75], quality: "m", root: "G#", degree: "v"});
                 expect(cSharpMinor.chord(6, "T")).to.deep.include({midi: [69, 73, 76], quality: "M", root: "A", degree: "VI"});
                 expect(cSharpMinor.chord(7, "T")).to.deep.include({midi: [71, 75, 78], quality: "M", root: "B", degree: "VII"});
-            })
+            });
+
+            it("chords for scale degrees above the octave range map correctly", () => {
+                expect(dMinPent.chord(10, "m")).to.deep.include({midi: [72, 75, 79], quality: "m", root: "C", degree: "v"});
+                expect(cMinor.chord(8, "m")).to.deep.include({midi: [48, 51, 55], quality: "m", root: "C", degree: "i"});
+                expect(cMinor.chord(9, "T")).to.deep.include({midi: [50, 53, 56], quality: "dim", root: "D", degree: "iio"});
+            });
         });
 
 

@@ -141,7 +141,8 @@ export class Key {
                         [...new Array(this.mode.stepOffsets.length)].map((_, i) => i + 1).reverse()[(Math.abs(degree) - 1) % this.mode.stepOffsets.length] :
                         degree;
 
-        if (absDegree > this.mode.stepOffsets.length) absDegree = absDegree % this.mode.stepOffsets.length;
+        // Note the conversion to/from 1 based indexing with scale degrees, to the 0 based indexing assumed by modulo
+        if (absDegree > this.mode.stepOffsets.length) absDegree = (absDegree - 1) % this.mode.stepOffsets.length + 1;
 
         if (quality.startsWith("M")) {
             return quality.replace("M", noteData.chordNumeralsMap[absDegree]);
