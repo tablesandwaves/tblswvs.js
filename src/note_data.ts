@@ -1,16 +1,16 @@
 export const scaleNoteCandidates: string[][] = [
-    ["B#", "C"],
+    ["B#", "C", "Dbb"],
     ["C#", "Db"],
-    ["Cx", "D"],
+    ["Cx", "D", "Ebb"],
     ["D#", "Eb"],
-    ["E", "Fb"],
+    ["Dx", "E", "Fb"],
     ["E#", "F", "Gbb"],
     ["F#", "Gb"],
-    ["Fx", "G"],
+    ["Fx", "G", "Abb"],
     ["G#", "Ab"],
     ["Gx", "A", "Bbb"],
-    ["A#", "Bb"],
-    ["B", "Cb"]
+    ["A#", "Bb", "Cbb"],
+    ["Ax", "B", "Cb"]
 ];
 
 

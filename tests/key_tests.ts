@@ -286,6 +286,11 @@ describe("Key", () => {
             expect(cMinor.midi2note(1)).to.equal("C#-2");
             expect(cMinor.midi2note(28)).to.equal("E♮0");
         });
+
+        it("returns a natural in a scale with three half step intervals", () => {
+            const gs = new Key(50, Scale.GS);
+            expect(gs.midi2note(60)).to.equal("C♮3");
+        });
     });
 
 
@@ -326,8 +331,31 @@ describe("Key", () => {
         });
 
         it("for GS", () => {
-            const expected = ["C", "Db", "Eb", "Fb", "Gbb", "Ab", "Bbb"];
+            let expected;
+            expected = ["C", "Db", "Eb", "Fb", "Gbb", "Ab", "Bbb"];
             expect(new Key("C", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["C#", "D", "E", "F", "Gb", "A", "Bb"];
+            expect(new Key("C#", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["D", "Eb", "F", "Gb", "Abb", "Bb", "Cb"];
+            expect(new Key("D", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["D#", "E", "F#", "G", "Ab", "B", "C"];
+            expect(new Key("D#", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["E", "F", "G", "Ab", "Bbb", "C", "Db"];
+            expect(new Key("E", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["F", "Gb", "Ab", "Bbb", "Cbb", "Db", "Ebb"];
+            expect(new Key("F", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["F#", "G", "A", "Bb", "Cb", "D", "Eb"];
+            expect(new Key("F#", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["G", "Ab", "Bb", "Cb", "Dbb", "Eb", "Fb"];
+            expect(new Key("G", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["G#", "A", "B", "C", "Db", "E", "F"];
+            expect(new Key("G#", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["A", "Bb", "C", "Db", "Ebb", "F", "Gb"];
+            expect(new Key("A", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["A#", "B", "C#", "D", "Eb", "F#", "G"];
+            expect(new Key("A#", Scale.GS).scaleNotes).to.have.ordered.members(expected);
+            expected = ["B", "C", "D", "Eb", "Fb", "G", "Ab"];
+            expect(new Key("B", Scale.GS).scaleNotes).to.have.ordered.members(expected);
         });
     });
 })
