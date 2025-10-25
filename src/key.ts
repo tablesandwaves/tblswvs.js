@@ -216,9 +216,6 @@ export class Key {
         this.inversionMin = negativeDegrees[0];
         this.inversionMax = positiveDegrees[positiveDegrees.length - 1];
 
-        const blerg = negativeDegrees.concat(positiveDegrees);
-        return helpers.inversionMap(
-            blerg
-        );
+        return helpers.inversionMap( negativeDegrees.concat(positiveDegrees) );
     }
 }
