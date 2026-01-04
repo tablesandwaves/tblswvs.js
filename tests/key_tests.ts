@@ -23,6 +23,19 @@ describe("Key", () => {
         it("knows its tonic as a letter", () => expect(dDorian.tonic).to.equal("D"));
         it("knows its tonic as a MIDI note number", () => expect(dDorian.midiTonic).to.equal(2));
         it("has the default octave 1", () => expect(dDorian.octave).to.equal(1));
+        it("has a scale name", () => expect(dDorian.scaleName).to.equal("Dorian"));
+        it("has a name", () => expect(dDorian.name).to.equal("D Dorian"));
+    });
+
+
+    describe("when created with a scale name as a string", () => {
+        let dDorian = new Key("D", Scale["Dorian"]);
+
+        it("knows its tonic as a letter", () => expect(dDorian.tonic).to.equal("D"));
+        it("knows its tonic as a MIDI note number", () => expect(dDorian.midiTonic).to.equal(2));
+        it("has the default octave 1", () => expect(dDorian.octave).to.equal(1));
+        it("has a scale name", () => expect(dDorian.scaleName).to.equal("Dorian"));
+        it("has a name", () => expect(dDorian.name).to.equal("D Dorian"));
     });
 
 
