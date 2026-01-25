@@ -138,6 +138,7 @@ describe("Key", () => {
         let gDorian     = new Key(55, Scale.Dorian);
         let cSharpMinor = new Key(61, Scale.Minor);
         let dMinPent    = new Key(50, Scale.MinPentatonic);
+        let cDiminished = new Key("C", Scale.Diminished);
 
         describe("requesting a chord for degree 0", () => {
             it("returns an error for scale degree 0", () => {
@@ -152,7 +153,7 @@ describe("Key", () => {
             });
 
             it("power", () => {
-                expect(cMajor.chord(2, "pow")).to.deep.include({midi: [38, 45], quality: "pow", root: "D", degree: "2pow"});
+                expect(cMajor.chord(2, "pow")).to.deep.include({midi: [38, 45], quality: "P5", root: "D", degree: "2P5"});
             });
 
             it("major triads", () => {
@@ -193,8 +194,8 @@ describe("Key", () => {
             });
 
             it("chords for scale degrees above the octave range map correctly", () => {
-                expect(dMinPent.chord(10, "m")).to.deep.include({midi: [72, 75, 79], quality: "m", root: "C", degree: "v"});
-                expect(cMinor.chord(8, "m")).to.deep.include({midi: [48, 51, 55], quality: "m", root: "C", degree: "i"});
+                expect(dMinPent.chord(10, "T")).to.deep.include({midi: [72, 77, 81], quality: "M/5", root: "C", degree: "V/5"});
+                expect(cMinor.chord(8, "T")).to.deep.include({midi: [48, 51, 55], quality: "m", root: "C", degree: "i"});
                 expect(cMinor.chord(9, "T")).to.deep.include({midi: [50, 53, 56], quality: "dim", root: "D", degree: "iio"});
             });
         });
@@ -205,20 +206,19 @@ describe("Key", () => {
             const cWT         = new Key("C", Scale.WholeTone);
             const cChromatic  = new Key("C", Scale.Chromatic);
             const cGS         = new Key("C", Scale.GS);
-            const cDiminished = new Key("C", Scale.Diminished);
 
             it("finds a minor slash chord", () => {
-                expect(cMajPent.chord(1, "T")).to.deep.include({midi: [36, 40, 45], quality: "m/3", root: "A", degree: "i/3"});
+                expect(cMajPent.chord(1, "T")).to.deep.include({midi: [36, 40, 45], quality: "m/3", root: "C", degree: "i/3"});
             });
 
             it("finds a sus2 slash chord", () => {
-                expect(cMajPent.chord(2, "T")).to.deep.include({midi: [38, 43, 48], quality: "sus2/2", root: "C", degree: "IIsus2/2"});
-                expect(cMajPent.chord(3, "T")).to.deep.include({midi: [40, 45, 50], quality: "sus2/2", root: "D", degree: "IIIsus2/2"});
-                expect(cMajPent.chord(5, "T")).to.deep.include({midi: [45, 50, 55], quality: "sus2/2", root: "G", degree: "Vsus2/2"});
+                expect(cMajPent.chord(2, "T")).to.deep.include({midi: [38, 43, 48], quality: "sus2/2", root: "D", degree: "IIsus2/2"});
+                expect(cMajPent.chord(3, "T")).to.deep.include({midi: [40, 45, 50], quality: "sus2/2", root: "E", degree: "IIIsus2/2"});
+                expect(cMajPent.chord(5, "T")).to.deep.include({midi: [45, 50, 55], quality: "sus2/2", root: "A", degree: "Vsus2/2"});
             });
 
             it("finds a major slash chord", () => {
-                expect(cMajPent.chord(4, "T")).to.deep.include({midi: [43, 48, 52], quality: "M/5", root: "C", degree: "IV/5"});
+                expect(cMajPent.chord(4, "T")).to.deep.include({midi: [43, 48, 52], quality: "M/5", root: "G", degree: "IV/5"});
             });
 
             it("finds an augmented chord", () => {
@@ -234,10 +234,6 @@ describe("Key", () => {
             it("finds a chord with a flatted degree", () => {
                 expect(cGS.chord(1, "T")).to.deep.include({midi: [36, 39, 41], quality: "m5bb", root: "C", degree: "i5bb"});
                 expect(cGS.chord(3, "T")).to.deep.include({midi: [39, 41, 45], quality: "sus25b", root: "Eb", degree: "IIIsus25b"});
-            });
-
-            it("finds a chord below the octave", () => {
-                expect(cDiminished.chord(-1, "T")).to.deep.include({midi: [35, 38, 41], quality: "dim", root: "B", degree: "viiio"});
             });
         });
 
@@ -264,6 +260,239 @@ describe("Key", () => {
 
             it("can use a negative scale degree index beyond the first negative octave", () => {
                 expect(cMinor.chord(-11, "T")).to.deep.include({midi: [17, 20, 24], quality: "m", root: "F", degree: "iv"});
+            });
+
+            it("finds a chord below the octave", () => {
+                expect(cDiminished.chord(-1, "T")).to.deep.include({midi: [35, 38, 41], quality: "dim", root: "B", degree: "viiio"});
+            });
+        });
+
+
+        describe("generating dyads", () => {
+            describe("for a heptatonic scale", () => {
+                let cMajor      = new Key("C", Scale.Major);
+                let cMinor      = new Key("C", Scale.Minor);
+                let gDorian     = new Key(55, Scale.Dorian);
+
+                it("generates major scale 2-dyads", () => {
+                    expect(cMajor.chord(1, "dyad2")).to.deep.include({midi: [36, 38], quality: "M2", root: "C", degree: "I2"});
+                    expect(cMajor.chord(2, "dyad2")).to.deep.include({midi: [38, 40], quality: "M2", root: "D", degree: "II2"});
+                    expect(cMajor.chord(3, "dyad2")).to.deep.include({midi: [40, 41], quality: "m2", root: "E", degree: "iii2"});
+                    expect(cMajor.chord(4, "dyad2")).to.deep.include({midi: [41, 43], quality: "M2", root: "F", degree: "IV2"});
+                    expect(cMajor.chord(5, "dyad2")).to.deep.include({midi: [43, 45], quality: "M2", root: "G", degree: "V2"});
+                    expect(cMajor.chord(6, "dyad2")).to.deep.include({midi: [45, 47], quality: "M2", root: "A", degree: "VI2"});
+                    expect(cMajor.chord(7, "dyad2")).to.deep.include({midi: [47, 48], quality: "m2", root: "B", degree: "vii2"});
+                });
+
+                it("generates minor scale 2-dyads", () => {
+                    expect(cMinor.chord(1, "dyad2")).to.deep.include({midi: [36, 38], quality: "M2", root: "C", degree: "I2"});
+                    expect(cMinor.chord(2, "dyad2")).to.deep.include({midi: [38, 39], quality: "m2", root: "D", degree: "ii2"});
+                    expect(cMinor.chord(3, "dyad2")).to.deep.include({midi: [39, 41], quality: "M2", root: "Eb", degree: "III2"});
+                    expect(cMinor.chord(4, "dyad2")).to.deep.include({midi: [41, 43], quality: "M2", root: "F", degree: "IV2"});
+                    expect(cMinor.chord(5, "dyad2")).to.deep.include({midi: [43, 44], quality: "m2", root: "G", degree: "v2"});
+                    expect(cMinor.chord(6, "dyad2")).to.deep.include({midi: [44, 46], quality: "M2", root: "Ab", degree: "VI2"});
+                    expect(cMinor.chord(7, "dyad2")).to.deep.include({midi: [46, 48], quality: "M2", root: "Bb", degree: "VII2"});
+                });
+
+                it("generates major scale 3-dyads", () => {
+                    expect(cMajor.chord(1, "dyad3")).to.deep.include({midi: [36, 40], quality: "M3", root: "C", degree: "I3"});
+                    expect(cMajor.chord(2, "dyad3")).to.deep.include({midi: [38, 41], quality: "m3", root: "D", degree: "ii3"});
+                    expect(cMajor.chord(3, "dyad3")).to.deep.include({midi: [40, 43], quality: "m3", root: "E", degree: "iii3"});
+                    expect(cMajor.chord(4, "dyad3")).to.deep.include({midi: [41, 45], quality: "M3", root: "F", degree: "IV3"});
+                    expect(cMajor.chord(5, "dyad3")).to.deep.include({midi: [43, 47], quality: "M3", root: "G", degree: "V3"});
+                    expect(cMajor.chord(6, "dyad3")).to.deep.include({midi: [45, 48], quality: "m3", root: "A", degree: "vi3"});
+                    expect(cMajor.chord(7, "dyad3")).to.deep.include({midi: [47, 50], quality: "m3", root: "B", degree: "vii3"});
+                });
+
+                it("generates minor scale 3-dyads", () => {
+                    expect(cMinor.chord(1, "dyad3")).to.deep.include({midi: [36, 39], quality: "m3", root: "C",  degree: "i3"});
+                    expect(cMinor.chord(2, "dyad3")).to.deep.include({midi: [38, 41], quality: "m3", root: "D",  degree: "ii3"});
+                    expect(cMinor.chord(3, "dyad3")).to.deep.include({midi: [39, 43], quality: "M3", root: "Eb", degree: "III3"});
+                    expect(cMinor.chord(4, "dyad3")).to.deep.include({midi: [41, 44], quality: "m3", root: "F",  degree: "iv3"});
+                    expect(cMinor.chord(5, "dyad3")).to.deep.include({midi: [43, 46], quality: "m3", root: "G",  degree: "v3"});
+                    expect(cMinor.chord(6, "dyad3")).to.deep.include({midi: [44, 48], quality: "M3", root: "Ab", degree: "VI3"});
+                    expect(cMinor.chord(7, "dyad3")).to.deep.include({midi: [46, 50], quality: "M3", root: "Bb", degree: "VII3"});
+                });
+
+                it("generates major scale 4-dyads", () => {
+                    expect(cMajor.chord(1, "dyad4")).to.deep.include({midi: [36, 41], quality: "P4",   root: "C", degree: "1P4"});
+                    expect(cMajor.chord(2, "dyad4")).to.deep.include({midi: [38, 43], quality: "P4",   root: "D", degree: "2P4"});
+                    expect(cMajor.chord(3, "dyad4")).to.deep.include({midi: [40, 45], quality: "P4",   root: "E", degree: "3P4"});
+                    expect(cMajor.chord(4, "dyad4")).to.deep.include({midi: [41, 47], quality: "dim5", root: "F", degree: "iv5o"});
+                    expect(cMajor.chord(5, "dyad4")).to.deep.include({midi: [43, 48], quality: "P4",   root: "G", degree: "5P4"});
+                    expect(cMajor.chord(6, "dyad4")).to.deep.include({midi: [45, 50], quality: "P4",   root: "A", degree: "6P4"});
+                    expect(cMajor.chord(7, "dyad4")).to.deep.include({midi: [47, 52], quality: "P4",   root: "B", degree: "7P4"});
+                });
+
+                it("generates minor scale 4-dyads", () => {
+                    expect(cMinor.chord(1, "dyad4")).to.deep.include({midi: [36, 41], quality: "P4",   root: "C",  degree: "1P4"});
+                    expect(cMinor.chord(2, "dyad4")).to.deep.include({midi: [38, 43], quality: "P4",   root: "D",  degree: "2P4"});
+                    expect(cMinor.chord(3, "dyad4")).to.deep.include({midi: [39, 44], quality: "P4",   root: "Eb", degree: "3P4"});
+                    expect(cMinor.chord(4, "dyad4")).to.deep.include({midi: [41, 46], quality: "P4",   root: "F",  degree: "4P4"});
+                    expect(cMinor.chord(5, "dyad4")).to.deep.include({midi: [43, 48], quality: "P4",   root: "G",  degree: "5P4"});
+                    expect(cMinor.chord(6, "dyad4")).to.deep.include({midi: [44, 50], quality: "dim5", root: "Ab", degree: "vi5o"});
+                    expect(cMinor.chord(7, "dyad4")).to.deep.include({midi: [46, 51], quality: "P4",   root: "Bb", degree: "7P4"});
+                });
+
+                it("generates major scale 5-dyads", () => {
+                    expect(cMajor.chord(1, "dyad5")).to.deep.include({midi: [36, 43], quality: "P5",   root: "C", degree: "1P5"});
+                    expect(cMajor.chord(2, "dyad5")).to.deep.include({midi: [38, 45], quality: "P5",   root: "D", degree: "2P5"});
+                    expect(cMajor.chord(3, "dyad5")).to.deep.include({midi: [40, 47], quality: "P5",   root: "E", degree: "3P5"});
+                    expect(cMajor.chord(4, "dyad5")).to.deep.include({midi: [41, 48], quality: "P5",   root: "F", degree: "4P5"});
+                    expect(cMajor.chord(5, "dyad5")).to.deep.include({midi: [43, 50], quality: "P5",   root: "G", degree: "5P5"});
+                    expect(cMajor.chord(6, "dyad5")).to.deep.include({midi: [45, 52], quality: "P5",   root: "A", degree: "6P5"});
+                    expect(cMajor.chord(7, "dyad5")).to.deep.include({midi: [47, 53], quality: "dim5", root: "B", degree: "vii5o"});
+                });
+
+                it("generates minor scale 5-dyads", () => {
+                    expect(cMinor.chord(1, "dyad5")).to.deep.include({midi: [36, 43], quality: "P5",   root: "C",  degree: "1P5"});
+                    expect(cMinor.chord(2, "dyad5")).to.deep.include({midi: [38, 44], quality: "dim5", root: "D",  degree: "ii5o"});
+                    expect(cMinor.chord(3, "dyad5")).to.deep.include({midi: [39, 46], quality: "P5",   root: "Eb", degree: "3P5"});
+                    expect(cMinor.chord(4, "dyad5")).to.deep.include({midi: [41, 48], quality: "P5",   root: "F",  degree: "4P5"});
+                    expect(cMinor.chord(5, "dyad5")).to.deep.include({midi: [43, 50], quality: "P5",   root: "G",  degree: "5P5"});
+                    expect(cMinor.chord(6, "dyad5")).to.deep.include({midi: [44, 51], quality: "P5",   root: "Ab", degree: "6P5"});
+                    expect(cMinor.chord(7, "dyad5")).to.deep.include({midi: [46, 53], quality: "P5",   root: "Bb", degree: "7P5"});
+                });
+
+                it("generates major scale 6-dyads", () => {
+                    expect(cMajor.chord(1, "dyad6")).to.deep.include({midi: [36, 45], quality: "M6", root: "C", degree: "I6"});
+                    expect(cMajor.chord(2, "dyad6")).to.deep.include({midi: [38, 47], quality: "M6", root: "D", degree: "II6"});
+                    expect(cMajor.chord(3, "dyad6")).to.deep.include({midi: [40, 48], quality: "m6", root: "E", degree: "iii6"});
+                    expect(cMajor.chord(4, "dyad6")).to.deep.include({midi: [41, 50], quality: "M6", root: "F", degree: "IV6"});
+                    expect(cMajor.chord(5, "dyad6")).to.deep.include({midi: [43, 52], quality: "M6", root: "G", degree: "V6"});
+                    expect(cMajor.chord(6, "dyad6")).to.deep.include({midi: [45, 53], quality: "m6", root: "A", degree: "vi6"});
+                    expect(cMajor.chord(7, "dyad6")).to.deep.include({midi: [47, 55], quality: "m6", root: "B", degree: "vii6"});
+                });
+
+                it("generates minor scale 6-dyads", () => {
+                    expect(cMinor.chord(1, "dyad6")).to.deep.include({midi: [36, 44], quality: "m6", root: "C",  degree: "i6"});
+                    expect(cMinor.chord(2, "dyad6")).to.deep.include({midi: [38, 46], quality: "m6", root: "D",  degree: "ii6"});
+                    expect(cMinor.chord(3, "dyad6")).to.deep.include({midi: [39, 48], quality: "M6", root: "Eb", degree: "III6"});
+                    expect(cMinor.chord(4, "dyad6")).to.deep.include({midi: [41, 50], quality: "M6", root: "F",  degree: "IV6"});
+                    expect(cMinor.chord(5, "dyad6")).to.deep.include({midi: [43, 51], quality: "m6", root: "G",  degree: "v6"});
+                    expect(cMinor.chord(6, "dyad6")).to.deep.include({midi: [44, 53], quality: "M6", root: "Ab", degree: "VI6"});
+                    expect(cMinor.chord(7, "dyad6")).to.deep.include({midi: [46, 55], quality: "M6", root: "Bb", degree: "VII6"});
+                });
+
+                it("generates major scale 7-dyads", () => {
+                    expect(cMajor.chord(1, "dyad7")).to.deep.include({midi: [36, 47], quality: "M7", root: "C", degree: "I7"});
+                    expect(cMajor.chord(2, "dyad7")).to.deep.include({midi: [38, 48], quality: "m7", root: "D", degree: "ii7"});
+                    expect(cMajor.chord(3, "dyad7")).to.deep.include({midi: [40, 50], quality: "m7", root: "E", degree: "iii7"});
+                    expect(cMajor.chord(4, "dyad7")).to.deep.include({midi: [41, 52], quality: "M7", root: "F", degree: "IV7"});
+                    expect(cMajor.chord(5, "dyad7")).to.deep.include({midi: [43, 53], quality: "m7", root: "G", degree: "v7"});
+                    expect(cMajor.chord(6, "dyad7")).to.deep.include({midi: [45, 55], quality: "m7", root: "A", degree: "vi7"});
+                    expect(cMajor.chord(7, "dyad7")).to.deep.include({midi: [47, 57], quality: "m7", root: "B", degree: "vii7"});
+                });
+
+                it("generates minor scale 7-dyads", () => {
+                    expect(cMinor.chord(1, "dyad7")).to.deep.include({midi: [36, 46], quality: "m7", root: "C",  degree: "i7"});
+                    expect(cMinor.chord(2, "dyad7")).to.deep.include({midi: [38, 48], quality: "m7", root: "D",  degree: "ii7"});
+                    expect(cMinor.chord(3, "dyad7")).to.deep.include({midi: [39, 50], quality: "M7", root: "Eb", degree: "III7"});
+                    expect(cMinor.chord(4, "dyad7")).to.deep.include({midi: [41, 51], quality: "m7", root: "F",  degree: "iv7"});
+                    expect(cMinor.chord(5, "dyad7")).to.deep.include({midi: [43, 53], quality: "m7", root: "G",  degree: "v7"});
+                    expect(cMinor.chord(6, "dyad7")).to.deep.include({midi: [44, 55], quality: "M7", root: "Ab", degree: "VI7"});
+                    expect(cMinor.chord(7, "dyad7")).to.deep.include({midi: [46, 56], quality: "m7", root: "Bb", degree: "vii7"});
+                });
+
+                it("generates major scale 8-dyads", () => {
+                    expect(cMajor.chord(1, "dyad8")).to.deep.include({midi: [36, 48], quality: "oct", root: "C", degree: "1oct"});
+                    expect(cMajor.chord(2, "dyad8")).to.deep.include({midi: [38, 50], quality: "oct", root: "D", degree: "2oct"});
+                    expect(cMajor.chord(3, "dyad8")).to.deep.include({midi: [40, 52], quality: "oct", root: "E", degree: "3oct"});
+                    expect(cMajor.chord(4, "dyad8")).to.deep.include({midi: [41, 53], quality: "oct", root: "F", degree: "4oct"});
+                    expect(cMajor.chord(5, "dyad8")).to.deep.include({midi: [43, 55], quality: "oct", root: "G", degree: "5oct"});
+                    expect(cMajor.chord(6, "dyad8")).to.deep.include({midi: [45, 57], quality: "oct", root: "A", degree: "6oct"});
+                    expect(cMajor.chord(7, "dyad8")).to.deep.include({midi: [47, 59], quality: "oct", root: "B", degree: "7oct"});
+                });
+
+                it("generates minor scale 8-dyads", () => {
+                    expect(cMinor.chord(1, "dyad8")).to.deep.include({midi: [36, 48], quality: "oct", root: "C",  degree: "1oct"});
+                    expect(cMinor.chord(2, "dyad8")).to.deep.include({midi: [38, 50], quality: "oct", root: "D",  degree: "2oct"});
+                    expect(cMinor.chord(3, "dyad8")).to.deep.include({midi: [39, 51], quality: "oct", root: "Eb", degree: "3oct"});
+                    expect(cMinor.chord(4, "dyad8")).to.deep.include({midi: [41, 53], quality: "oct", root: "F",  degree: "4oct"});
+                    expect(cMinor.chord(5, "dyad8")).to.deep.include({midi: [43, 55], quality: "oct", root: "G",  degree: "5oct"});
+                    expect(cMinor.chord(6, "dyad8")).to.deep.include({midi: [44, 56], quality: "oct", root: "Ab", degree: "6oct"});
+                    expect(cMinor.chord(7, "dyad8")).to.deep.include({midi: [46, 58], quality: "oct", root: "Bb", degree: "7oct"});
+                });
+
+                it("generates major scale 9-dyads", () => {
+                    expect(cMajor.chord(1, "dyad9")).to.deep.include({midi: [36, 50], quality: "M9", root: "C", degree: "I9"});
+                    expect(cMajor.chord(2, "dyad9")).to.deep.include({midi: [38, 52], quality: "M9", root: "D", degree: "II9"});
+                    expect(cMajor.chord(3, "dyad9")).to.deep.include({midi: [40, 53], quality: "m9", root: "E", degree: "iii9"});
+                    expect(cMajor.chord(4, "dyad9")).to.deep.include({midi: [41, 55], quality: "M9", root: "F", degree: "IV9"});
+                    expect(cMajor.chord(5, "dyad9")).to.deep.include({midi: [43, 57], quality: "M9", root: "G", degree: "V9"});
+                    expect(cMajor.chord(6, "dyad9")).to.deep.include({midi: [45, 59], quality: "M9", root: "A", degree: "VI9"});
+                    expect(cMajor.chord(7, "dyad9")).to.deep.include({midi: [47, 60], quality: "m9", root: "B", degree: "vii9"});
+                });
+
+                it("generates minor scale 9-dyads", () => {
+                    expect(cMinor.chord(1, "dyad9")).to.deep.include({midi: [36, 50], quality: "M9", root: "C",  degree: "I9"});
+                    expect(cMinor.chord(2, "dyad9")).to.deep.include({midi: [38, 51], quality: "m9", root: "D",  degree: "ii9"});
+                    expect(cMinor.chord(3, "dyad9")).to.deep.include({midi: [39, 53], quality: "M9", root: "Eb", degree: "III9"});
+                    expect(cMinor.chord(4, "dyad9")).to.deep.include({midi: [41, 55], quality: "M9", root: "F",  degree: "IV9"});
+                    expect(cMinor.chord(5, "dyad9")).to.deep.include({midi: [43, 56], quality: "m9", root: "G",  degree: "v9"});
+                    expect(cMinor.chord(6, "dyad9")).to.deep.include({midi: [44, 58], quality: "M9", root: "Ab", degree: "VI9"});
+                    expect(cMinor.chord(7, "dyad9")).to.deep.include({midi: [46, 60], quality: "M9", root: "Bb", degree: "VII9"});
+                });
+
+                it("generates major scale 10-dyads", () => {
+                    expect(cMajor.chord(1, "dyad10")).to.deep.include({midi: [36, 52], quality: "M10", root: "C", degree: "I10"});
+                    expect(cMajor.chord(2, "dyad10")).to.deep.include({midi: [38, 53], quality: "m10", root: "D", degree: "ii10"});
+                    expect(cMajor.chord(3, "dyad10")).to.deep.include({midi: [40, 55], quality: "m10", root: "E", degree: "iii10"});
+                    expect(cMajor.chord(4, "dyad10")).to.deep.include({midi: [41, 57], quality: "M10", root: "F", degree: "IV10"});
+                    expect(cMajor.chord(5, "dyad10")).to.deep.include({midi: [43, 59], quality: "M10", root: "G", degree: "V10"});
+                    expect(cMajor.chord(6, "dyad10")).to.deep.include({midi: [45, 60], quality: "m10", root: "A", degree: "vi10"});
+                    expect(cMajor.chord(7, "dyad10")).to.deep.include({midi: [47, 62], quality: "m10", root: "B", degree: "vii10"});
+                });
+
+                it("generates minor scale 10-dyads", () => {
+                    expect(cMinor.chord(1, "dyad10")).to.deep.include({midi: [36, 51], quality: "m10", root: "C",  degree: "i10"});
+                    expect(cMinor.chord(2, "dyad10")).to.deep.include({midi: [38, 53], quality: "m10", root: "D",  degree: "ii10"});
+                    expect(cMinor.chord(3, "dyad10")).to.deep.include({midi: [39, 55], quality: "M10", root: "Eb", degree: "III10"});
+                    expect(cMinor.chord(4, "dyad10")).to.deep.include({midi: [41, 56], quality: "m10", root: "F",  degree: "iv10"});
+                    expect(cMinor.chord(5, "dyad10")).to.deep.include({midi: [43, 58], quality: "m10", root: "G",  degree: "v10"});
+                    expect(cMinor.chord(6, "dyad10")).to.deep.include({midi: [44, 60], quality: "M10", root: "Ab", degree: "VI10"});
+                    expect(cMinor.chord(7, "dyad10")).to.deep.include({midi: [46, 62], quality: "M10", root: "Bb", degree: "VII10"});
+                });
+
+                it("generates major scale 11-dyads", () => {
+                    expect(cMajor.chord(1, "dyad11")).to.deep.include({midi: [36, 53], quality: "m11", root: "C", degree: "i11"});
+                    expect(cMajor.chord(2, "dyad11")).to.deep.include({midi: [38, 55], quality: "m11", root: "D", degree: "ii11"});
+                    expect(cMajor.chord(3, "dyad11")).to.deep.include({midi: [40, 57], quality: "m11", root: "E", degree: "iii11"});
+                    expect(cMajor.chord(4, "dyad11")).to.deep.include({midi: [41, 59], quality: "M11", root: "F", degree: "IV11"});
+                    expect(cMajor.chord(5, "dyad11")).to.deep.include({midi: [43, 60], quality: "m11", root: "G", degree: "v11"});
+                    expect(cMajor.chord(6, "dyad11")).to.deep.include({midi: [45, 62], quality: "m11", root: "A", degree: "vi11"});
+                    expect(cMajor.chord(7, "dyad11")).to.deep.include({midi: [47, 64], quality: "m11", root: "B", degree: "vii11"});
+                });
+
+                it("generates minor scale 11-dyads", () => {
+                    expect(cMinor.chord(1, "dyad11")).to.deep.include({midi: [36, 53], quality: "m11", root: "C",  degree: "i11"});
+                    expect(cMinor.chord(2, "dyad11")).to.deep.include({midi: [38, 55], quality: "m11", root: "D",  degree: "ii11"});
+                    expect(cMinor.chord(3, "dyad11")).to.deep.include({midi: [39, 56], quality: "m11", root: "Eb", degree: "iii11"});
+                    expect(cMinor.chord(4, "dyad11")).to.deep.include({midi: [41, 58], quality: "m11", root: "F",  degree: "iv11"});
+                    expect(cMinor.chord(5, "dyad11")).to.deep.include({midi: [43, 60], quality: "m11", root: "G",  degree: "v11"});
+                    expect(cMinor.chord(6, "dyad11")).to.deep.include({midi: [44, 62], quality: "M11", root: "Ab", degree: "VI11"});
+                    expect(cMinor.chord(7, "dyad11")).to.deep.include({midi: [46, 63], quality: "m11", root: "Bb", degree: "vii11"});
+                });
+
+                it("generates major scale 12-dyads", () => {
+                    expect(cMajor.chord(1, "dyad12")).to.deep.include({midi: [36, 55], quality: "m12", root: "C", degree: "i12"});
+                    expect(cMajor.chord(2, "dyad12")).to.deep.include({midi: [38, 57], quality: "m12", root: "D", degree: "ii12"});
+                    expect(cMajor.chord(3, "dyad12")).to.deep.include({midi: [40, 59], quality: "m12", root: "E", degree: "iii12"});
+                    expect(cMajor.chord(4, "dyad12")).to.deep.include({midi: [41, 60], quality: "m12", root: "F", degree: "iv12"});
+                    expect(cMajor.chord(5, "dyad12")).to.deep.include({midi: [43, 62], quality: "m12", root: "G", degree: "v12"});
+                    expect(cMajor.chord(6, "dyad12")).to.deep.include({midi: [45, 64], quality: "m12", root: "A", degree: "vi12"});
+                    expect(cMajor.chord(7, "dyad12")).to.deep.include({midi: [47, 65], quality: "M11", root: "B", degree: "VII11"});
+                });
+
+                it("generates minor scale 12-dyads", () => {
+                    expect(cMinor.chord(1, "dyad12")).to.deep.include({midi: [36, 55], quality: "m12", root: "C",  degree: "i12"});
+                    expect(cMinor.chord(2, "dyad12")).to.deep.include({midi: [38, 56], quality: "M11", root: "D",  degree: "II11"});
+                    expect(cMinor.chord(3, "dyad12")).to.deep.include({midi: [39, 58], quality: "m12", root: "Eb", degree: "iii12"});
+                    expect(cMinor.chord(4, "dyad12")).to.deep.include({midi: [41, 60], quality: "m12", root: "F",  degree: "iv12"});
+                    expect(cMinor.chord(5, "dyad12")).to.deep.include({midi: [43, 62], quality: "m12", root: "G",  degree: "v12"});
+                    expect(cMinor.chord(6, "dyad12")).to.deep.include({midi: [44, 63], quality: "m12", root: "Ab", degree: "vi12"});
+                    expect(cMinor.chord(7, "dyad12")).to.deep.include({midi: [46, 65], quality: "m12", root: "Bb", degree: "vii12"});
+                });
             });
         });
     });

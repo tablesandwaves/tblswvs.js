@@ -62,21 +62,56 @@ export type chordSpec = {
 
 
 export const chordTypes: Record<string, chordSpec> = {
-  "oct":    {intervals: [0, 12]},
-  "pow":    {intervals: [0, 7]},
-  "M":      {intervals: [0, 4, 7]},
-  "m":      {intervals: [0, 3, 7]},
-  "dim":    {intervals: [0, 3, 6]},
-  "aug":    {intervals: [0, 4, 8]},
-  "sus2":   {intervals: [0, 2, 7]},
-  "sus4":   {intervals: [0, 5, 7]},
-  "m/3":    {intervals: [0, 4, 9]},
-  "sus25b": {intervals: [0, 2, 6]},
-  "sus2/2": {intervals: [0, 5, 10]},
-  "M/5":    {intervals: [0, 5, 9]},
-  "WT":     {intervals: [0, 2, 4]},
-  "m5bb":   {intervals: [0, 3, 5]}
-}
+  "T":       { intervals: [0, 2, 4] },
+  "T+7":     { intervals: [0, 2, 4, 6] },
+  "T+9":     { intervals: [0, 2, 4, 6, 8] },
+  "dyad2":   { intervals: [0, 1] },
+  "dyad3":   { intervals: [0, 2] },
+  "dyad4":   { intervals: [0, 3] },
+  "dyad5":   { intervals: [0, 4] },
+  "dyad6":   { intervals: [0, 5] },
+  "dyad7":   { intervals: [0, 6] },
+  "dyad8":   { intervals: [0, 7] },
+  "dyad9":   { intervals: [0, 8] },
+  "dyad10":  { intervals: [0, 9] },
+  "dyad11":  { intervals: [0, 10] },
+  "dyad12":  { intervals: [0, 11] },
+};
+
+
+export const chordIntervalMap: Record<string, {quality: string}> = {
+  "0:1":  { quality: "m2", },
+  "0:2":  { quality: "M2", },
+  "0:3":  { quality: "m3", },
+  "0:4":  { quality: "M3", },
+  "0:5":  { quality: "P4", },
+  "0:6":  { quality: "dim5", },
+  "0:7":  { quality: "P5", },
+  "0:8":  { quality: "m6", },
+  "0:9":  { quality: "M6", },
+  "0:10": { quality: "m7", },
+  "0:11": { quality: "M7", },
+  "0:12": { quality: "oct", },
+  "0:13": { quality: "m9", },
+  "0:14": { quality: "M9", },
+  "0:15": { quality: "m10", },
+  "0:16": { quality: "M10", },
+  "0:17": { quality: "m11", },
+  "0:18": { quality: "M11", },
+  "0:19": { quality: "m12", },
+  "0:20": { quality: "M12", },
+
+  "0:4:7": { quality: "M", },
+  "0:3:7": { quality: "m", },
+  "0:4:8": { quality: "aug", },
+  "0:3:6": { quality: "dim", },
+  "0:5:9": { quality: "M/5" },
+  "0:4:9": { quality: "m/3" },
+  "0:5:10": { quality: "sus2/2" },
+  "0:2:4":  { quality: "WT" },
+  "0:3:5":  { quality: "m5bb" },
+  "0:2:6":  { quality: "sus25b" },
+};
 
 
 // IMPORTANT: Keep the array in MIDI 0-127 index order.

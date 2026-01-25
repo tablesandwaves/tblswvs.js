@@ -89,56 +89,45 @@ export class Key {
     chord(degree: number, type: string, octaveTransposition?: number): noteData.chord {
         if (degree == 0) throw new TblswvsError(helpers.SCALE_DEGREE_ERROR);
 
-        let quality = (degree < 0) ?
-                      ((type == "T") ? this.mode.chordQualities.slice().reverse()[(Math.abs(degree) - 1) % this.mode.chordQualities.length] : type) :
-                      ((type == "T") ? this.mode.chordQualities[(degree - 1) % this.mode.chordQualities.length] : type);
+        let midi;
+        switch (type) {
+            case "oct":
+                midi = [this.degree(degree).midi, this.degree(degree).midi + 12];
+                break;
+            case "pow":
+                midi = [this.degree(degree).midi, this.degree(degree).midi + 7];
+                break;
+            default:
+                let chordDegrees = noteData.chordTypes[type].intervals.map(interval => degree + interval);
 
-        /*
-         * octaveTransposition: the calling client may request transposition (-/+)
-         * this.midiTonic: scale pitch class (0-11)
-         * this.octave * 12: the Key has a default lowest octave
-         * + 24: lowest MIDI octave, -2, means this.octave*12 could be as low as -24, which should be brought up to MIDI note 0
-         */
-        let midiTransposition = (octaveTransposition == undefined ? 0 : octaveTransposition * 12) + this.midiTonic + (this.octave * 12) + 24;
-        if (degree < 0)
-            midiTransposition += (Math.floor(degree / this.mode.scaleOffsets.length) * 12);
-        else
-            midiTransposition += (Math.floor((degree - 1) / this.mode.scaleOffsets.length) * 12);
+                // Accommodate negative scale degrees and no 0th degree.
+                let zeroCrossing = false;
+                chordDegrees = chordDegrees.map((chordDegree, i, arr) => {
+                    if (i > 0 && Math.sign(chordDegree) !== Math.sign(arr[i - 1]))
+                        zeroCrossing = true;
 
-        let midi = noteData.chordTypes[quality].intervals.reduce((midiNotes: number[], intv: number) => {
-            let scaleOffset = (degree < 0) ?
-                              this.mode.scaleOffsets.slice().reverse()[(Math.abs(degree) - 1) % this.mode.scaleOffsets.length] :
-                              this.mode.scaleOffsets[(degree - 1) % this.mode.scaleOffsets.length];
-            midiNotes.push(intv + scaleOffset + midiTransposition);
-            return midiNotes;
-        }, []);
+                    return chordDegree === 0 || zeroCrossing ? chordDegree + 1 : chordDegree;
+                });
+
+                midi = chordDegrees.map(scaleDegree => this.degree(scaleDegree).midi);
+        }
+
+        const quality = noteData.chordIntervalMap[midi.sort().map((noteNumber, _, arr) => noteNumber % arr[0]).join(":")].quality;
 
         return {
-            midi: midi,
+            midi: midi.map(noteNumber => noteNumber + (12 * (octaveTransposition ? octaveTransposition : 0))),
             quality: quality,
-            root: this.#calculateChordRoot(midi, quality),
-            degree: this.#calculateChordDegree(quality, degree),
-        }
-    }
-
-
-    #calculateChordRoot(chordMidi: number[], chordQuality: string): string {
-        let inversion = chordQuality.split("/")[1];
-        if (inversion === undefined) {
-            return this.midi2note(chordMidi[0]).replace(/[0-9\-]/g, "");
-        } else if (inversion == "2" || inversion == "3" || inversion == "4") {
-            return this.midi2note(chordMidi[2]).replace(/[0-9]/g, "");
-        } else if (inversion == "5") {
-            return this.midi2note(chordMidi[1]).replace(/[0-9]/g, "");
-        } else {
-            return this.midi2note(chordMidi[0]).replace(/[0-9]/g, "");
+            root: this.degree(degree).note,
+            degree: this.#calculateChordDegree(quality, degree)
         }
     }
 
 
     #calculateChordDegree(quality: string, degree: number): string {
         let absDegree = (degree < 0) ?
-                        [...new Array(this.mode.stepOffsets.length)].map((_, i) => i + 1).reverse()[(Math.abs(degree) - 1) % this.mode.stepOffsets.length] :
+                        [...new Array(this.mode.stepOffsets.length)]
+                            .map((_, i) => i + 1)
+                            .reverse()[(Math.abs(degree) - 1) % this.mode.stepOffsets.length] :
                         degree;
 
         // Note the conversion to/from 1 based indexing with scale degrees, to the 0 based indexing assumed by modulo
