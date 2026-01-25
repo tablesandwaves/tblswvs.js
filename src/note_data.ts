@@ -63,8 +63,6 @@ export type chordSpec = {
 
 export const chordTypes: Record<string, chordSpec> = {
   "T":       { intervals: [0, 2, 4] },
-  "T+7":     { intervals: [0, 2, 4, 6] },
-  "T+9":     { intervals: [0, 2, 4, 6, 8] },
   "dyad2":   { intervals: [0, 1] },
   "dyad3":   { intervals: [0, 2] },
   "dyad4":   { intervals: [0, 3] },
@@ -105,12 +103,6 @@ export const chordIntervalMap: Record<string, {quality: string}> = {
   "0:3:7": { quality: "m", },
   "0:4:8": { quality: "aug", },
   "0:3:6": { quality: "dim", },
-  "0:5:9": { quality: "M/5" },
-  "0:4:9": { quality: "m/3" },
-  "0:5:10": { quality: "sus2/2" },
-  "0:2:4":  { quality: "WT" },
-  "0:3:5":  { quality: "m5bb" },
-  "0:2:6":  { quality: "sus25b" },
 };
 
 

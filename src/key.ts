@@ -112,7 +112,8 @@ export class Key {
                 midi = chordDegrees.map(scaleDegree => this.degree(scaleDegree).midi);
         }
 
-        const quality = noteData.chordIntervalMap[midi.sort().map((noteNumber, _, arr) => noteNumber % arr[0]).join(":")].quality;
+        const chordInterval = noteData.chordIntervalMap[midi.sort().map((noteNumber, _, arr) => noteNumber % arr[0]).join(":")];
+        const quality       = chordInterval ? chordInterval.quality : "-";
 
         return {
             midi: midi.map(noteNumber => noteNumber + (12 * (octaveTransposition ? octaveTransposition : 0))),
@@ -148,7 +149,7 @@ export class Key {
         } else if (quality.startsWith("WT")) {
             return quality.replace("WT", noteData.chordNumeralsMap[absDegree]).toLowerCase() + "WT";
         } else {
-            return absDegree + quality;
+            return absDegree.toString();
         }
     }
 
