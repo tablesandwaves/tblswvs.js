@@ -13,15 +13,11 @@ export function getFileContents(mocksPath: string) {
 
 
 export function isSelfReplicatingAt(sequence: (number|string)[], ratio: number): boolean {
-    let index = 0;
-    let copy = new Array(sequence.length);
+    for (let i = 0, replicatingI = 0; replicatingI < sequence.length; i++, replicatingI += ratio)
+        if (sequence[replicatingI] !== sequence[i])
+            return false;
 
-    while (copy.findIndex(n => n == undefined) >= 0) {
-        copy[index] = sequence[(index * ratio) % sequence.length];
-        index += 1;
-    }
-
-    return sequence.length === copy.length && sequence.every((value, index) => value === copy[index]);
+    return true;
 }
 
 

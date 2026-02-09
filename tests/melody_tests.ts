@@ -5,6 +5,7 @@ import { Melody } from "../src/melody";
 import { TblswvsError } from "../src/tblswvs_error";
 import * as helpers from "./test_helpers";
 import { chromaticScale, noteData } from "../src/note_data";
+import { areCoprime } from "../src/helpers";
 
 
 describe("Melody", () => {
@@ -89,6 +90,14 @@ describe("Melody", () => {
                 const melody = new Melody(notes);
                 const selfReplicatingNotes = melody.selfReplicate(63).notes;
                 expect(selfReplicatingNotes).not.to.include(undefined);
+            });
+
+            it("self replicates for many coprime length/ratio combinations", () => {
+                for (let length = 0; length < 100; length++)
+                    for (let ratio = 0; ratio < 16; ratio++) {
+                        if (!areCoprime(length, ratio)) continue;
+                        expect(helpers.isSelfReplicatingAt( melody.selfReplicate(length, ratio).notes.map(n => n.note), ratio)).to.be.true;
+                    }
             });
         });
 

@@ -66,42 +66,20 @@ export class Melody {
         if (!helpers.areCoprime(length, ratio))
             throw new TblswvsError(helpers.SELF_SIMILARITY_REQUIRES_COPRIMES);
 
-        let sequence = new Array(length).fill(-1);
-        sequence[0] = this.notes[0];
-        sequence[1] = this.notes[1 % this.notes.length];
+        const sequence = new Array(length * ratio)
+            .fill(this.notes.map((_, i) => i))
+            .flat()
+            .slice(0, length);
 
-        let contiguousSequence, currentNote, stepAmount, nextNote;
-        let nextEmpty = sequence.findIndex(note => note == -1),
-            count = 2;
-
-        // Build a self replicating melody by powers of 2 until all notes are filled.
-        do {
-            contiguousSequence = sequence.slice(0, nextEmpty);
-
-            for (let noteIndex = 0; noteIndex < contiguousSequence.length; noteIndex++) {
-                // For each note in the contiguous sequence...
-                currentNote = contiguousSequence[noteIndex];
-
-                // Determine the self replicating step amounts by computing the powers of 2 for
-                // non-redundant step amounts based on the target length
-                for (let power = 1; power <= Math.log2(length); power++) {
-                    stepAmount = ratio ** power;
-
-                    // Fill in the melody's future step indices with the current replicating note.
-                    sequence[(noteIndex * stepAmount) % length] = currentNote;
-                }
+        for (let i = 0, j = 0; i < sequence.length; i++) {
+            if (i % ratio === 0) {
+                sequence[i] = sequence[j];
+                j++;
             }
-
-            // If the sequence still has empty spots, find the first one and fill it with the next
-            // note in the input note list.
-            nextNote = this.notes[count % this.notes.length];
-            nextEmpty = sequence.findIndex(note => note == -1);
-            if (nextEmpty != -1) sequence[nextEmpty] = nextNote;
-            count++;
-        } while (nextEmpty != -1);
+        }
 
         let melody = this.clone();
-        melody.notes = sequence;
+        melody.notes = sequence.map(index => this.notes[index]);
         return melody;
     }
 

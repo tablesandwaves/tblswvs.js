@@ -1,4 +1,4 @@
 A G F G
-E D F D
-G G F G 
-E D F D
+D A F F
+E G A G
+D E D A
