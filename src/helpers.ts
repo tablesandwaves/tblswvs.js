@@ -16,6 +16,9 @@ export const SCALE_DEGREE_SHIFTS_REQUIRE_KEY =
 export const KEY_REQUIRED_FOR_MUTATION =
     "Mutations require a Melody object with a key";
 
+export const RANGE_ERROR =
+    "Range must contain two numbers with min (index 0) smaller than max (index 1)";
+
 
 export const unique = (value: any, index: number, self: any) => {
     return self.indexOf(value) === index;

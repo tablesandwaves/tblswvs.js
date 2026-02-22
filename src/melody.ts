@@ -149,17 +149,71 @@ export class Melody {
      *
      * @param seed the sequence's first two steps, defaults to 0, 1
      * @param size the length of the resulting Meldoy's steps, defaults to 16
-     * @param offset offset in the returned sequence from which the sequence starts
-     * @returns a Melody with the infinity series as its steps
+     * @param offset: center number for the sequence starts (e.g., 60), or min and max boundaries of a number range (e.g., [36, 51])
+     * @returns a number array with the infinity series integers
      */
-    static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number = 0): number[] {
+    static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number|number[] = 0, boundaryMode: string = "clamp"): number[] {
+        if (typeof offset === "object" && (offset.length < 2 || offset[1] <= offset[0]))
+            throw new TblswvsError(helpers.RANGE_ERROR);
+
         const root         = seed[0];
         const step1        = seed[1];
         const seedInterval = step1 - root;
 
-        return Array.from(new Array(size), (n, i) => i + offset).map(step => {
+        const sequence = Array.from(new Array(size), (_, i) => i + (typeof offset === "number" ? offset : 0)).map(step => {
             return root + (Melody.norgardInteger(step) * seedInterval);
         });
+
+        if (typeof offset === "number")
+            return sequence;
+        else if (boundaryMode === "wrap")
+            return Melody.centerAndWrap(sequence, offset[0], offset[1]);
+        else if (boundaryMode === "fold")
+            return Melody.centerAndFold(sequence, offset[0], offset[1]);
+        else
+            return Melody.centerAndClamp(sequence, offset[0], offset[1]);
+    }
+
+
+    static centerAndClamp(sequence: number[], rangeMin: number, rangeMax: number): number[] {
+        const centeredSequence = Melody.generateCenteredSequence(sequence, rangeMin, rangeMax);
+        return centeredSequence.map(index => {
+            if (index > rangeMax - rangeMin)
+                return rangeMax;
+            else if (index < 0)
+                return rangeMin;
+
+            return index + rangeMin;
+        });
+    }
+
+
+    static centerAndWrap(sequence: number[], rangeMin: number, rangeMax: number) {
+        const centeredSequence = Melody.generateCenteredSequence(sequence, rangeMin, rangeMax);
+        return centeredSequence.map(offset => {
+            const index = offset % (rangeMax - rangeMin + 1);
+            return (index < 0 ? rangeMax - rangeMin + index + 1 : index) + rangeMin;
+        });
+    }
+
+
+    static centerAndFold(sequence: number[], rangeMin: number, rangeMax: number) {
+        const centeredSequence = Melody.generateCenteredSequence(sequence, rangeMin, rangeMax);
+        const rangeIndexMax    = rangeMax - rangeMin;
+        return centeredSequence.map(index => {
+            const direction      = Math.floor(index / rangeIndexMax) % 2 === 0 ? 1 : -1;
+            const boundaryOffset = index % rangeIndexMax;
+            return (direction === 1 ? boundaryOffset : rangeIndexMax - Math.abs(boundaryOffset)) + rangeMin;
+        });
+    }
+
+
+    static generateCenteredSequence(sequence: number[], rangeMin: number, rangeMax: number) {
+        const rangeIndices = [...new Array(rangeMax - rangeMin + 1).keys()];
+        const centerIndex  = (rangeIndices.length % 2 === 0) ?
+                             (rangeIndices.length / 2) :
+                             ((rangeIndices.length + 1) / 2) - 1;
+        return sequence.map(n => n + centerIndex);
     }
 
 

@@ -156,5 +156,46 @@ describe("Melody", () => {
         it("can generate an arbitrary portion for any seed", () => {
             expect(Melody.infinitySeries([0, 3], 4, 4)).to.have.ordered.members(seqquence_0_3.slice(4, 8));
         });
+
+        it("can clamp the number sequence to a number range", () => {
+            const expected = [
+                44, 47, 41, 50,  47, 44, 38, 51,  41, 50, 44, 47,  50, 41, 36, 51,
+                47, 44, 38, 51,  44, 47, 41, 50,  38, 51, 47, 44,  51, 38, 36, 51,
+                41, 50, 44, 47,  50, 41, 36, 51,  44, 47, 41, 50,  47, 44, 38, 51,
+                50, 41, 36, 51,  41, 50, 44, 47,  36, 51, 50, 41
+            ];
+            const actual = Melody.infinitySeries([0, 3], 60, [36, 51], "clamp");
+            expect(actual).to.have.ordered.members(expected);
+        });
+
+        it("can wrap the number sequence to a number range", () => {
+            const expected = [
+                44, 47, 41, 50,  47, 44, 38, 37,  41, 50, 44, 47,  50, 41, 51, 40,
+                47, 44, 38, 37,  44, 47, 41, 50,  38, 37, 47, 44,  37, 38, 48, 43,
+                41, 50, 44, 47,  50, 41, 51, 40,  44, 47, 41, 50,  47, 44, 38, 37,
+                50, 41, 51, 40,  41, 50, 44, 47,  51, 40, 50, 41
+            ];
+            const actual = Melody.infinitySeries([0, 3], 60, [36, 51], "wrap");
+            expect(actual).to.have.ordered.members(expected);
+        });
+
+        it("can fold the number sequence to a number range", () => {
+            const expected = [
+                44, 47, 41, 50,  47, 44, 38, 49,  41, 50, 44, 47,  50, 41, 50, 46,
+                47, 44, 38, 49,  44, 47, 41, 50,  38, 49, 47, 44,  49, 38, 47, 43,
+                41, 50, 44, 47,  50, 41, 50, 46,  44, 47, 41, 50,  47, 44, 38, 49,
+                50, 41, 50, 46,  41, 50, 44, 47,  50, 46, 50, 41
+            ];
+            const actual = Melody.infinitySeries([0, 3], 60, [36, 51], "fold");
+            expect(actual).to.have.ordered.members(expected);
+        });
+
+        it("throws an error when the range min is greater than the range max", () => {
+            expect(() => { Melody.infinitySeries([0, 3], 60, [51, 36], "fold") }).to.throw(TblswvsError, "Range must contain");
+        });
+
+        it("throws an error when the range is missing either min or max", () => {
+            expect(() => { Melody.infinitySeries([0, 3], 60, [36], "fold") }).to.throw(TblswvsError, "Range must contain");
+        });
     });
 });
