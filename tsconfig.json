@@ -3,7 +3,7 @@
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "esnext",
+    "module": "commonjs",
     "target": "esnext",
     "outDir": "./dist/lib/esnext",
     "moduleResolution": "node",

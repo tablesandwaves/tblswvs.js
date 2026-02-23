@@ -1,6 +1,6 @@
 {
   "name": "tblswvs",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "description": "Utility for opinionated processing of musical data",
   "main": "lib/esnext/index.js",
   "module": "lib/esnext/index.js",
