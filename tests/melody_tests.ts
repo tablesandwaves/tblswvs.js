@@ -137,14 +137,14 @@ describe("Melody", () => {
 
     describe("the infinity series", () => {
         const baseSequence  = [0, 1, -1, 2, 1, 0, -2, 3, -1, 2, 0, 1, 2, -1, -3, 4];
-        const seqquence_0_3 = [0, 3, -3, 6, 3, 0, -6, 9, -3, 6, 0, 3, 6, -3, -9, 12];
+        const sequence_0_3  = [0, 3, -3, 6, 3, 0, -6, 9, -3, 6, 0, 3, 6, -3, -9, 12];
 
         it("produces the base sequence when given no args", () => {
             expect(Melody.infinitySeries()).to.have.ordered.members(baseSequence);
         });
 
         it("can generate series with different seeds", () => {
-            expect(Melody.infinitySeries([0, 3])).to.have.ordered.members(seqquence_0_3);
+            expect(Melody.infinitySeries([0, 3])).to.have.ordered.members(sequence_0_3);
         });
 
         it("can generate an arbitrary portion of the sequence", () => {
@@ -154,7 +154,11 @@ describe("Melody", () => {
         });
 
         it("can generate an arbitrary portion for any seed", () => {
-            expect(Melody.infinitySeries([0, 3], 4, 4)).to.have.ordered.members(seqquence_0_3.slice(4, 8));
+            expect(Melody.infinitySeries([0, 3], 4, 4)).to.have.ordered.members(sequence_0_3.slice(4, 8));
+        });
+
+        it("can center on a number greater than zero", () => {
+            expect(Melody.infinitySeries([0, 1], 16, 0, 60)).to.have.ordered.members(baseSequence.map(n => n + 60));
         });
 
         it("can clamp the number sequence to a number range", () => {
@@ -164,7 +168,7 @@ describe("Melody", () => {
                 41, 50, 44, 47,  50, 41, 36, 51,  44, 47, 41, 50,  47, 44, 38, 51,
                 50, 41, 36, 51,  41, 50, 44, 47,  36, 51, 50, 41
             ];
-            const actual = Melody.infinitySeries([0, 3], 60, [36, 51], "clamp");
+            const actual = Melody.infinitySeries([0, 3], 60, 0, [36, 51], "clamp");
             expect(actual).to.have.ordered.members(expected);
         });
 
@@ -175,7 +179,7 @@ describe("Melody", () => {
                 41, 50, 44, 47,  50, 41, 51, 40,  44, 47, 41, 50,  47, 44, 38, 37,
                 50, 41, 51, 40,  41, 50, 44, 47,  51, 40, 50, 41
             ];
-            const actual = Melody.infinitySeries([0, 3], 60, [36, 51], "wrap");
+            const actual = Melody.infinitySeries([0, 3], 60, 0, [36, 51], "wrap");
             expect(actual).to.have.ordered.members(expected);
         });
 
@@ -186,16 +190,16 @@ describe("Melody", () => {
                 41, 50, 44, 47,  50, 41, 50, 46,  44, 47, 41, 50,  47, 44, 38, 49,
                 50, 41, 50, 46,  41, 50, 44, 47,  50, 46, 50, 41
             ];
-            const actual = Melody.infinitySeries([0, 3], 60, [36, 51], "fold");
+            const actual = Melody.infinitySeries([0, 3], 60, 0, [36, 51], "fold");
             expect(actual).to.have.ordered.members(expected);
         });
 
         it("throws an error when the range min is greater than the range max", () => {
-            expect(() => { Melody.infinitySeries([0, 3], 60, [51, 36], "fold") }).to.throw(TblswvsError, "Range must contain");
+            expect(() => { Melody.infinitySeries([0, 3], 60, 0, [51, 36], "fold") }).to.throw(TblswvsError, "Range must contain");
         });
 
         it("throws an error when the range is missing either min or max", () => {
-            expect(() => { Melody.infinitySeries([0, 3], 60, [36], "fold") }).to.throw(TblswvsError, "Range must contain");
+            expect(() => { Melody.infinitySeries([0, 3], 60, 0, [36], "fold") }).to.throw(TblswvsError, "Range must contain");
         });
     });
 });

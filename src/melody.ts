@@ -149,29 +149,32 @@ export class Melody {
      *
      * @param seed the sequence's first two steps, defaults to 0, 1
      * @param size the length of the resulting Meldoy's steps, defaults to 16
-     * @param offset: center number for the sequence starts (e.g., 60), or min and max boundaries of a number range (e.g., [36, 51])
+     * @param offset offset offset in the returned sequence from which the sequence starts
+     * @param center center number for the sequence starts (e.g., 60), or min and max boundaries of a number range (e.g., [36, 51])
      * @returns a number array with the infinity series integers
      */
-    static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number|number[] = 0, boundaryMode: string = "clamp"): number[] {
-        if (typeof offset === "object" && (offset.length < 2 || offset[1] <= offset[0]))
+    static infinitySeries(seed: number[] = [0, 1], size: number = 16, offset: number = 0,
+        center: number|number[] = 0, boundaryMode: string = "clamp"): number[] {
+
+        if (typeof center === "object" && (center.length < 2 || center[1] <= center[0]))
             throw new TblswvsError(helpers.RANGE_ERROR);
 
-        const root         = seed[0];
+        const root         = (typeof center === "number") ? center : seed[0];
         const step1        = seed[1];
-        const seedInterval = step1 - root;
+        const seedInterval = step1 - seed[0];
 
         const sequence = Array.from(new Array(size), (_, i) => i + (typeof offset === "number" ? offset : 0)).map(step => {
             return root + (Melody.norgardInteger(step) * seedInterval);
         });
 
-        if (typeof offset === "number")
+        if (typeof center === "number")
             return sequence;
         else if (boundaryMode === "wrap")
-            return Melody.centerAndWrap(sequence, offset[0], offset[1]);
+            return Melody.centerAndWrap(sequence, center[0], center[1]);
         else if (boundaryMode === "fold")
-            return Melody.centerAndFold(sequence, offset[0], offset[1]);
+            return Melody.centerAndFold(sequence, center[0], center[1]);
         else
-            return Melody.centerAndClamp(sequence, offset[0], offset[1]);
+            return Melody.centerAndClamp(sequence, center[0], center[1]);
     }
 
 
