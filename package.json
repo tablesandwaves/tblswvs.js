@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'",
-    "compile": "npm test && rm -rf dist/lib && tsc && tsc --build tsconfig.es5.json"
+    "compile": "npm test && rm -rf dist/lib && tsc"
   },
   "author": "Tables & Waves <tablesandwaves@gmail.com>",
   "license": "MIT",
@@ -15,9 +15,9 @@
     "@types/mocha": "^9.1.1",
     "chai": "^4.5.0",
     "mocha": "^11.7.5",
-    "ts-loader": "^9.5.2",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.9.5"
+    "ts-loader": "^9.5.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "overrides": {
     "mocha": {
