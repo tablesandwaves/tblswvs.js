@@ -3,10 +3,11 @@
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es2022",
-    "outDir": "./dist/lib/es6",
-    "moduleResolution": "node"
+    "module": "esnext",
+    "target": "esnext",
+    "outDir": "./dist/lib/esnext",
+    "moduleResolution": "node",
+    "declaration": true
   },
   "include": ["./src/**/*"],
   "exclude": [

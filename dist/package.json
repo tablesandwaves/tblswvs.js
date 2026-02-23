@@ -2,8 +2,8 @@
   "name": "tblswvs",
   "version": "0.23.0",
   "description": "Utility for opinionated processing of musical data",
-  "main": "lib/es5/index.js",
-  "module": "lib/es6/index.js",
+  "main": "lib/esnext/index.js",
+  "module": "lib/esnext/index.js",
   "sideEffects": false,
   "repository": {
     "type": "git",
