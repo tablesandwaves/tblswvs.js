@@ -1,31 +1,19 @@
 {
   "name": "tblswvs",
-  "version": "0.23.1",
+  "version": "0.24.0",
   "description": "Utility for opinionated processing of musical data",
   "repository": "git@github.com:tablesandwaves/tblswvs.js.git",
   "private": true,
   "scripts": {
-    "test": "node --trace-warnings --import tsx --test tests/shift_register_tests.ts",
+    "test": "node --trace-warnings --import tsx --test tests/*.ts",
     "compile": "npm test && rm -rf dist/lib && tsc"
   },
   "author": "Tables & Waves <tablesandwaves@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^4.3.20",
-    "@types/mocha": "^9.1.1",
-    "chai": "^4.5.0",
-    "mocha": "^11.7.5",
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "mocha": {
-      "glob": "latest",
-      "diff": "latest",
-      "minimatch": "latest",
-      "serialize-javascript": "latest"
-    }
   }
 }
