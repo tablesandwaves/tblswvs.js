@@ -20,7 +20,7 @@ export class Mutation {
 
     static random(inputMelody: Melody, algorithms?: string[]): Melody {
         if (algorithms == undefined)
-            algorithms = Object.getOwnPropertyNames(Mutation).filter(func => !["length", "name", "prototype"].includes(func));
+            algorithms = [...this.functionMap.keys()];
 
         const algorithm = this.functionMap.get(algorithms[Math.floor(Math.random() * algorithms.length)]);
         if (algorithm != undefined)
