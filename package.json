@@ -5,7 +5,7 @@
   "repository": "git@github.com:tablesandwaves/tblswvs.js.git",
   "private": true,
   "scripts": {
-    "test": "node --trace-warnings --import tsx --test tests/melodic_vector_tests.ts",
+    "test": "node --trace-warnings --import tsx --test tests/melody_tests.ts",
     "compile": "npm test && rm -rf dist/lib && tsc"
   },
   "author": "Tables & Waves <tablesandwaves@gmail.com>",
