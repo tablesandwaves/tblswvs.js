@@ -1,4 +1,6 @@
-import { expect } from "chai";
+import assert from "node:assert";
+import { beforeEach, describe, it } from "node:test";
+
 
 import { LindenmayerSystem } from "../src/lindenmayer_system";
 
@@ -11,29 +13,29 @@ describe("LindenmayerSystem", () => {
             lsystem = new LindenmayerSystem("A");
             lsystem.add({matchStr: "A", output: "A B"});
         });
-    
+
         it("can add rules using the productionRule type", () => {
-            expect(lsystem.rules()).to.have.members(["A"]);
-            expect(lsystem.productionRules).to.have.property("A", "A B");
+            assert.deepEqual(lsystem.rules(), ["A"]);
+            assert.deepEqual(lsystem.productionRules, { A: 'A B' });
         });
-    
-        it("begins with a string equal to the axiom", () => expect(lsystem.string).to.equal("A"));
-    
+
+        it("begins with a string equal to the axiom", () => assert.equal(lsystem.string, "A"));
+
         it("can change the axiom", () => {
-            expect(lsystem.axiom).to.equal("A");
+            assert.equal(lsystem.axiom, "A");
             lsystem.axiom = "B";
-            expect(lsystem.axiom).to.equal("B");
+            assert.equal(lsystem.axiom, "B");
         });
-    
+
         it("can rewrite its string", () => {
             lsystem.add({matchStr: "A", output: "A B"});
             lsystem.add({matchStr: "B", output: "A"});
             lsystem.advance();
-            expect(lsystem.string).to.equal("A B");
+            assert.equal(lsystem.string, "A B");
             lsystem.advance();
-            expect(lsystem.string).to.equal("A B A");
+            assert.equal(lsystem.string, "A B A");
             lsystem.advance();
-            expect(lsystem.string).to.equal("A B A A B");
+            assert.equal(lsystem.string, "A B A A B");
         });
     });
 
@@ -46,13 +48,13 @@ describe("LindenmayerSystem", () => {
 
         it("creates a new row in its matrix", () => {
             let matrix = lsystem.matrix();
-            expect(matrix.length).to.equal(2)
+            assert.equal(matrix.length, 2)
         });
 
         it("starts the new row at the branch point", () => {
             let matrix = lsystem.matrix();
-            expect(matrix[0][0]).to.equal("F");
-            expect(matrix[0][0]).to.equal("F");
+            assert.equal(matrix[0][0], "F");
+            assert.equal(matrix[0][0], "F");
         });
 
         it("keeps adding rows as needed", () => {
@@ -66,10 +68,10 @@ describe("LindenmayerSystem", () => {
              */
             lsystem.advance();
             let matrix = lsystem.matrix();
-            expect(matrix[0][0]).to.equal("F");
-            expect(matrix[1][0]).to.equal("X");
-            expect(matrix[2][0]).to.equal("F");
-            expect(matrix[2][1]).to.equal("Y");
+            assert.equal(matrix[0][0], "F");
+            assert.equal(matrix[1][0], "X");
+            assert.equal(matrix[2][0], "F");
+            assert.equal(matrix[2][1], "Y");
 
             /**
              * String: F [ X ] [ F Y ] [ F [ X ] Y ]
@@ -83,13 +85,13 @@ describe("LindenmayerSystem", () => {
              */
             lsystem.advance();
             matrix = lsystem.matrix();
-            expect(matrix[0][0]).to.equal("F")
-            expect(matrix[1][0]).to.equal("X")
-            expect(matrix[2][0]).to.equal("F")
-            expect(matrix[2][1]).to.equal("Y")
-            expect(matrix[3][0]).to.equal("F")
-            expect(matrix[3][1]).to.equal("Y")
-            expect(matrix[4][0]).to.equal("X")
+            assert.equal(matrix[0][0], "F")
+            assert.equal(matrix[1][0], "X")
+            assert.equal(matrix[2][0], "F")
+            assert.equal(matrix[2][1], "Y")
+            assert.equal(matrix[3][0], "F")
+            assert.equal(matrix[3][1], "Y")
+            assert.equal(matrix[4][0], "X")
         });
     });
 });
