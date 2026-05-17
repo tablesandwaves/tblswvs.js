@@ -23,7 +23,8 @@
     "mocha": {
       "glob": "latest",
       "diff": "latest",
-      "minimatch": "latest"
+      "minimatch": "latest",
+      "serialize-javascript": "latest"
     }
   }
 }
