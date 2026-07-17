@@ -3,11 +3,13 @@
     "strict": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "commonjs",
+    "module": "es2022",
     "target": "esnext",
+    "rootDir": "./src",
     "outDir": "./dist/lib/esnext",
-    "moduleResolution": "node",
-    "declaration": true
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "types": ["node"],
   },
   "include": ["./src/**/*"],
   "exclude": [

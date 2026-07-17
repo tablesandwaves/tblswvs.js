@@ -10,10 +10,12 @@
   },
   "author": "Tables & Waves <tablesandwaves@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "devDependencies": {
+    "@types/node": "^25.8.0",
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

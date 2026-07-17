@@ -1,13 +1,12 @@
+import fs from "node:fs";
+import path from "node:path";
 import { Key } from "../src/key";
 import { MelodicVector } from "../src/melodic_vector";
 import { Melody } from "../src/melody";
 
-const fs = require("fs");
-const path = require("path");
-
 
 export function getFileContents(mocksPath: string) {
-    let filepath = path.resolve(__dirname, "support", mocksPath);
+    let filepath = path.resolve(import.meta.dirname, "support", mocksPath);
     return fs.readFileSync(filepath, "utf8");
 }
 
